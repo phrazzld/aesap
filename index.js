@@ -25,12 +25,14 @@ app.post("/handler", function (req, res) {
   var response;
 
   if(intent === "Gif"){
-    // res.send(JSON.parse())
+    response={
+      speech:"yo!"
+    }
   }
   else{
-    // response={}
-    res.send({speech:"yo!"});
+    response={speech:"yo!"}
   }
+  res.send(response);
 })
 
 app.listen(config.port, function (req, res) {
