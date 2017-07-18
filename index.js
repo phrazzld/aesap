@@ -20,8 +20,17 @@ app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
   console.log("req.body")
   console.log(req.body)
-  console.log(req.body.result.metadata.intentName);
-  res.send(JSON.parse('{"speech":"yo!"}'));
+
+  var intent = req.body.result.metadata.intentName;
+  var response;
+
+  if(intent === "Gif"){
+    // res.send(JSON.parse())
+  }
+  else{
+    // response={}
+    res.send({speech:"yo!"});
+  }
 })
 
 app.listen(config.port, function (req, res) {
