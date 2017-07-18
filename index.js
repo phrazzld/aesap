@@ -20,6 +20,7 @@ app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
   console.log("req.body")
   console.log(req.body)
+  console.log(req.body.result.metadata.intentName);
   res.send(JSON.parse('{"speech":"yo!"}'));
 })
 
