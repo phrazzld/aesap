@@ -20,7 +20,7 @@ app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
   console.log("req.body")
   console.log(req.body)
-  res.send("Success")
+  res.send(JSON.parse('{"speech":"yo!"}'));
 })
 
 app.listen(config.port, function (req, res) {
