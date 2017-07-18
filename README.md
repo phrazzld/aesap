@@ -1,2 +1,2 @@
 # aesap
-A slackbot for ASAP.
+A slackbot for ASAP
