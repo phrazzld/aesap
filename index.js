@@ -27,10 +27,10 @@ app.post("/handler", function (req, res) {
   if(intent === "Gif"){
     response={
       attachments:{
-        "fallback":"gif gif gif",
-        "color":"#007AB8",
-        "pretext":"doh!",
-        "image_url":"http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
+        fallback:"gif gif gif",
+        color:"#007AB8",
+        pretext:"doh!",
+        image_url:"http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
 
       }
     }
