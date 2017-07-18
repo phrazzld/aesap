@@ -25,7 +25,9 @@ app.post("/handler", function (req, res) {
   var response;
 
   if(intent === "Gif"){
+    console.log("issa jif?");
     response={
+      speech:"testing",
       data:{
         slack:{
           attachments:{
