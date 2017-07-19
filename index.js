@@ -36,20 +36,6 @@ var sendGif = function (pretext, image_url, text) {
   }
 }
 
-// Authenticate with the ASAP API and return our access token
-var getAccessToken = function () {
-  var url = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
-  request.get(url, function (error, response, body) {
-    if (error) { console.log("Error: " + error) }
-    console.log("response.headers")
-    console.log(response.headers)
-    console.log("response.headers.asap_accesstoken")
-    console.log(response.headers.asap_accesstoken)
-    return response.headers.asap_accesstoken
-  })
-}
-
-
 // router
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
@@ -67,8 +53,33 @@ app.post("/handler", function (req, res) {
   var intent = req.body.result.metadata.intentName;
   var response;
 
-  var accessToken = getAccessToken()
-  console.log("Access Token: " + accessToken)
+  // Authenticate with ASAP API
+  var authenticationUrl = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
+  request.get(url, function (error, response, body) {
+    if (error) { console.log("Authentication error: " + error) }
+    var accessToken = response.headers.asap_accesstoken
+    console.log("Access Token: " + accessToken)
+    var opts = {
+      url: config.apiUrl + "/invoices(2354651)",
+      method: "GET",
+      headers: {
+        Authorization: {
+          "user": config.apiUser,
+          "organizationId": config.apiOrgId,
+          "password": config.apiPw,
+          "apiKey": config.apiKey
+        },
+        "Content-Type": "application/json"
+      }
+    }
+    request.get(opts, function (e, r, b) {
+      console.log("e": e)
+      console.log("r")
+      console.log(r)
+      console.log("b")
+      console.log(b)
+    })
+  })
 
   if (intent === "Gif") {
     console.log("issa jif?");
