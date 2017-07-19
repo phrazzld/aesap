@@ -41,10 +41,7 @@ var getAccessToken = function () {
   var url = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
   request.get(url, function (error, response, body) {
     if (error) { console.log("Error: " + error) }
-    console.log("response")
-    console.log(response)
-    console.log("body")
-    console.log(body)
+    return response.headers.asapaccess_token
   })
 }
 
@@ -66,7 +63,8 @@ app.post("/handler", function (req, res) {
   var intent = req.body.result.metadata.intentName;
   var response;
 
-  getAccessToken()
+  var accessToken = getAccessToken()
+  console.log("Access Token: " + accessToken)
 
   if (intent === "Gif") {
     console.log("issa jif?");
