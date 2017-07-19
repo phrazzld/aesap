@@ -40,7 +40,7 @@ var sendGif = function (pretext, image_url, text) {
 var getAccessToken = function () {
   var url = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
   request.get(url, function (error, response, body) {
-    if (err) { console.log("Error: " + error) }
+    if (error) { console.log("Error: " + error) }
     console.log("response")
     console.log(response)
     console.log("body")
