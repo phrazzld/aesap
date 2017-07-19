@@ -4,38 +4,48 @@ var app = express()
 var sanitizer = require("express-sanitizer")
 var bodyParser = require("body-parser")
 var config = require("./config")
+var request = require("request")
 
-// middleware 
+// middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
 
 // functions
+var colors = ["#EB4D5C","#007AB8","#000","#4D394B","#FAD529","#298FC3"];
 
-var colors=["#EB4D5C","#007AB8","#000","#4D394B","#FAD529","#298FC3"];
-
-function sendGif(pretext, image_url, text){
+var sendGif = function (pretext, image_url, text) {
   pretext = pretext || "";
   text = text || "";
   var color = colors[Math.floor(Math.random()*colors.length)];
-
   return {
-    data:{
-      slack:{
-        attachments:[
+    data: {
+      slack: {
+        attachments: [
           {
-            fallback:"gif gif gif",
-            color:color,
-            pretext:pretext,
-            image_url:image_url,
-            text:text
+            fallback: "gif gif gif",
+            color: color,
+            pretext: pretext,
+            image_url: image_url,
+            text: text
           }
         ]
       }
     }
   }
+}
 
+// Authenticate with the ASAP API and return our access token
+var getAccessToken = function () {
+  var url = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
+  request.get(url, function (error, response, body) {
+    if (err) { console.log("Error: " + error) }
+    console.log("response")
+    console.log(response)
+    console.log("body")
+    console.log(body)
+  })
 }
 
 
@@ -56,12 +66,13 @@ app.post("/handler", function (req, res) {
   var intent = req.body.result.metadata.intentName;
   var response;
 
-  if(intent === "Gif"){
+  getAccessToken()
+
+  if (intent === "Gif") {
     console.log("issa jif?");
-    response=sendGif("doh!","http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif");
-  }
-  else{
-    response={speech:"yo!"}
+    response = sendGif("doh!", "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif");
+  } else {
+    response = { speech: "yo!" }
   }
   res.send(response);
 })
