@@ -73,7 +73,7 @@ app.post("/handler", function (req, res) {
       }
     }
     request.get(opts, function (e, r, b) {
-      console.log("e": e)
+      console.log("e: " + e)
       console.log("r")
       console.log(r)
       console.log("b")
