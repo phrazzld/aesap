@@ -65,7 +65,8 @@ app.post("/handler", function (req, res) {
       method: "GET",
       headers: {
         Authorization: authCredentials,
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Accept": "application/json"
       }
     }
     request.get(opts, function (e, r, b) {
