@@ -55,7 +55,7 @@ app.post("/handler", function (req, res) {
 
   // Authenticate with ASAP API
   var authenticationUrl = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
-  request.get(url, function (error, response, body) {
+  request.get(authenticationUrl, function (error, response, body) {
     if (error) { console.log("Authentication error: " + error) }
     var accessToken = response.headers.asap_accesstoken
     console.log("Access Token: " + accessToken)
