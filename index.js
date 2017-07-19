@@ -41,7 +41,11 @@ var getAccessToken = function () {
   var url = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
   request.get(url, function (error, response, body) {
     if (error) { console.log("Error: " + error) }
-    return response.headers.asapaccess_token
+    console.log("response.headers")
+    console.log(response.headers)
+    console.log("response.headers.asap_accesstoken")
+    console.log(response.headers.asap_accesstoken)
+    return response.headers.asap_accesstoken
   })
 }
 
