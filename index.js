@@ -54,28 +54,21 @@ app.post("/handler", function (req, res) {
   var response;
 
   // Authenticate with ASAP API
-  var authenticationUrl = config.apiUrl + "/login?user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
+  var authCredentials = "user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
+  var authenticationUrl = config.apiUrl + "/login?" + authCredentials
   request.get(authenticationUrl, function (error, response, body) {
     if (error) { console.log("Authentication error: " + error) }
     var accessToken = response.headers.asap_accesstoken
     console.log("Access Token: " + accessToken)
     var opts = {
-      url: config.apiUrl + "/invoices(2354651)",
+      url: config.apiUrl + "/courses",
       method: "GET",
       headers: {
-        Authorization: {
-          "user": config.apiUser,
-          "organizationId": config.apiOrgId,
-          "password": config.apiPw,
-          "apiKey": config.apiKey
-        },
+        Authorization: authCredentials,
         "Content-Type": "application/json"
       }
     }
     request.get(opts, function (e, r, b) {
-      console.log("e: " + e)
-      console.log("r")
-      console.log(r)
       console.log("b")
       console.log(b)
     })
