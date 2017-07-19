@@ -69,8 +69,8 @@ app.post("/handler", function (req, res) {
       }
     }
     request.get(opts, function (e, r, b) {
-      console.log("b")
-      console.log(b)
+      console.log("r")
+      console.log(r)
     })
   })
 
