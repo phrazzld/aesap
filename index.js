@@ -53,6 +53,23 @@ app.post("/handler", function (req, res) {
   console.log("stringified original slack request")
   console.log(JSON.stringify(req.body.originalRequest))
 
+  var slackBlob = req.body.originalRequest.data
+  var slackToken = slackBlob.token
+  var channelId = slackBlob.event.channel
+  var slackUrl = "https://slack.com/api/channels.info?"
+  slackUrl += "token=" + slackToken
+  slackUrl += "&channel=" + channelId
+
+  // Ping Slack API for channel info
+  request.get(slackUrl, function (error, response, body) {
+    console.log("Error: ")
+    console.log(error)
+    console.log("Response: ")
+    console.log(response)
+    console.log("Body: ")
+    console.log(body)
+  })
+
   var intent = req.body.result.metadata.intentName
   var response
 
