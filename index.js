@@ -50,6 +50,9 @@ app.post("/handler", function (req, res) {
   console.log("req.body")
   console.log(req.body)
 
+  console.log("stringified original slack request")
+  console.log(JSON.stringify(req.body.originalRequest))
+
   var intent = req.body.result.metadata.intentName
   var response
 
@@ -60,7 +63,7 @@ app.post("/handler", function (req, res) {
       "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
     )
   } else {
-    response = { speech: "yo!" }
+    response = { speech: req.body.result.fulfillment.speech }
   }
   res.send(response)
 })
