@@ -50,38 +50,19 @@ app.post("/handler", function (req, res) {
   console.log("req.body")
   console.log(req.body)
 
-  var intent = req.body.result.metadata.intentName;
-  var response;
-
-  // Authenticate with ASAP API
-  var authCredentials = "user=" + config.apiUser + "&organizationId=" + config.apiOrgId + "&password=" + config.apiPw + "&apiKey=" + config.apiKey
-  var authenticationUrl = config.apiUrl + "/login?" + authCredentials
-  request.get(authenticationUrl, function (error, response, body) {
-    if (error) { console.log("Authentication error: " + error) }
-    var accessToken = response.headers.asap_accesstoken
-    console.log("Access Token: " + accessToken)
-    var opts = {
-      url: config.apiUrl + "/courses",
-      method: "GET",
-      headers: {
-        Authorization: authCredentials,
-        "Content-Type": "application/json",
-        "Accept": "application/json"
-      }
-    }
-    request.get(opts, function (e, r, b) {
-      console.log("r")
-      console.log(r)
-    })
-  })
+  var intent = req.body.result.metadata.intentName
+  var response
 
   if (intent === "Gif") {
     console.log("issa jif?");
-    response = sendGif("doh!", "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif");
+    response = sendGif(
+      "doh!",
+      "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
+    )
   } else {
     response = { speech: "yo!" }
   }
-  res.send(response);
+  res.send(response)
 })
 
 app.listen(config.port, function (req, res) {
