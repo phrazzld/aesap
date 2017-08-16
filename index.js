@@ -50,7 +50,7 @@ app.post("/handler", function (req, res) {
   // console.log("req.body")
   // console.log(req.body)
 
-  var original=JSON.stringify(req.body.originalRequest
+  var original=JSON.stringify(req.body.originalRequest)
 
   console.log("stringified original slack request")
   console.log(original))
