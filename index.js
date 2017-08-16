@@ -47,8 +47,8 @@ app.use(function (req, res, next) {
 
 app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
-  console.log("req.body")
-  console.log(req.body)
+  // console.log("req.body")
+  // console.log(req.body)
 
   console.log("stringified original slack request")
   console.log(JSON.stringify(req.body.originalRequest))
