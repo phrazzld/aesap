@@ -61,14 +61,14 @@ app.post("/handler", function (req, res) {
   slackUrl += "&channel=" + channelId
 
   // Ping Slack API for channel info
-  request.get(slackUrl, function (error, response, body) {
-    console.log("Error: ")
-    console.log(error)
-    console.log("Response: ")
-    console.log(response)
-    console.log("Body: ")
-    console.log(body)
-  })
+  // request.get(slackUrl, function (error, response, body) {
+  //   console.log("Error: ")
+  //   console.log(error)
+  //   console.log("Response: ")
+  //   console.log(response)
+  //   console.log("Body: ")
+  //   console.log(body)
+  // })
 
   var intent = req.body.result.metadata.intentName
   var response
