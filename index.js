@@ -54,9 +54,8 @@ app.post("/handler", function (req, res) {
 
   console.log("stringified original slack request")
   console.log(JSON.stringify(original))
-  console.log(original.data.event.attachments)
 
-  var slackBlob = req.body.originalRequest.data
+  var slackBlob = original.data
   var slackToken = slackBlob.token
   var channelId = slackBlob.event.channel
   var slackUrl = "https://slack.com/api/channels.info?"
@@ -85,6 +84,16 @@ app.post("/handler", function (req, res) {
   } else {
     response = { speech: req.body.result.fulfillment.speech }
   }
+
+  if(original.data.event.attachments){
+    if(original.data.event.attachments.fields[0].value="Blocker"){
+      response="*Blocker Found*"
+    }
+    else{
+      response="Attachment Found"
+    }
+  }
+
   res.send(response)
 })
 
