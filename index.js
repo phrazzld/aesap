@@ -54,7 +54,7 @@ app.post("/handler", function (req, res) {
 
   console.log("stringified original slack request")
   console.log(JSON.stringify(original))
-  console.log(original.data.event.attachments.fields)
+  console.log(original.data.event.attachments)
 
   var slackBlob = original.data
   var slackToken = slackBlob.token
@@ -87,12 +87,12 @@ app.post("/handler", function (req, res) {
   }
 
   if(original.data.event.attachments){
-    if(original.data.event.attachments.fields[0].value="Blocker"){
-      response="*Blocker Found*"
-    }
-    else{
+    // if(original.data.event.attachments.fields[0].value="Blocker"){
+    //   response="*Blocker Found*"
+    // }
+    // else{
       response="Attachment Found"
-    }
+    // }
   }
 
   res.send(response)
