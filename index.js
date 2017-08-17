@@ -54,13 +54,15 @@ app.post("/jira", function (req, res) {
 
 app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
-  console.log("req.body")
-  console.log(req.body)
+  // console.log("req.body")
+  // console.log(req.body)
+
+  var original=req.body.originalRequest
 
   console.log("stringified original slack request")
-  console.log(JSON.stringify(req.body.originalRequest))
+  console.log(JSON.stringify(original))
 
-  var slackBlob = req.body.originalRequest.data
+  var slackBlob = original.data
   var slackToken = slackBlob.token
   var channelId = slackBlob.event.channel
   var slackUrl = "https://slack.com/api/channels.info?"
@@ -78,15 +80,35 @@ app.post("/handler", function (req, res) {
   var intent = req.body.result.metadata.intentName
   var response
 
-  if (intent === "Gif") {
-    console.log("issa jif?");
-    response = sendGif(
-      "doh!",
-      "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
-    )
-  } else {
-    response = { speech: req.body.result.fulfillment.speech }
+  if(original.data.event.attachments){
+    if(original.data.event.attachments[0].fields[0].value="Blocker"){
+      console.log("blocker found")
+      response={
+        data:{
+          slack:{
+            text:"*Blocker Found*",
+            attachments:original.data.event.attachments
+          }
+        }
+      }
+    }
+    else{
+      response={speech:"Attachment Found"}
+    }
   }
+  else{
+    if (intent === "Gif") {
+      console.log("issa jif?");
+      response = sendGif(
+        "doh!",
+        "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
+      )
+    } else {
+      response = { speech: req.body.result.fulfillment.speech }
+    }
+  }
+
+
   res.send(response)
 })
 
