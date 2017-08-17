@@ -54,6 +54,8 @@ app.post("/handler", function (req, res) {
 
   console.log("stringified original slack request")
   console.log(JSON.stringify(original))
+  console.log("stringified attachments:")
+  console.log(JSON.stringify(original.data.event.attachments))
 
   // TO DO : fields returns undefined
   // The type of the ticket is stored here
