@@ -78,11 +78,10 @@ app.post("/handler", function (req, res) {
   if(original.data.event.attachments){
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       console.log("blocker found")
-      response="*Blocker Found*"
-      res.send("Blocker")
+      response={speech:"*Blocker Found*"}
     }
     else{
-      response="Attachment Found"
+      response={speech:"Attachment Found"}
     }
   }
   else{
@@ -93,7 +92,7 @@ app.post("/handler", function (req, res) {
         "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
       )
     } else {
-      response = { speech: "Sorry, could you say that again?" }
+      response = { speech: req.body.result.fulfillment.speech }
     }
   }
 
