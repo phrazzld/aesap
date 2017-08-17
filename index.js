@@ -36,6 +36,14 @@ var sendGif = function (pretext, image_url, text) {
   }
 }
 
+var fallbacks=[
+  "Sorry, could you say that again?",
+  "I missed that. Say it again?",
+  "Can you say that again?",
+  "One more time?"
+]
+
+
 // router
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*")
@@ -92,7 +100,7 @@ app.post("/handler", function (req, res) {
         "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
       )
     } else {
-      response = { speech: req.body.result.fulfillment.speech }
+      response = { speech: "Sorry, could you say that again?" }
     }
   }
 
