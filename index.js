@@ -78,7 +78,14 @@ app.post("/handler", function (req, res) {
   if(original.data.event.attachments){
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       console.log("blocker found")
-      response={speech:"*Blocker Found*"}
+      response={
+        speech:"*Blocker Found*",
+        data:{
+          slack:{
+            attachments:original.data.event.attachments
+          }
+        }
+      }
     }
     else{
       response={speech:"Attachment Found"}
