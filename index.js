@@ -55,9 +55,6 @@ app.post("/handler", function (req, res) {
   console.log("stringified original slack request")
   console.log(JSON.stringify(original))
 
-  // The type of the ticket is stored here
-  console.log(original.data.event.attachments[0].fields)
-
   var slackBlob = original.data
   var slackToken = slackBlob.token
   var channelId = slackBlob.event.channel
@@ -88,7 +85,7 @@ app.post("/handler", function (req, res) {
     response = { speech: req.body.result.fulfillment.speech }
   }
 
-  if(original.data.event.attachments.length>0){
+  if(original.data.event.attachments){
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       response="*Blocker Found*"
     }
