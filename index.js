@@ -59,7 +59,7 @@ app.post("/handler", function (req, res) {
 
   // TO DO : fields returns undefined
   // The type of the ticket is stored here
-  // console.log(original.data.event.attachments.fields)
+  console.log(original.data.event.attachments)
 
   var slackBlob = original.data
   var slackToken = slackBlob.token
@@ -69,14 +69,14 @@ app.post("/handler", function (req, res) {
   slackUrl += "&channel=" + channelId
 
   // Ping Slack API for channel info
-  request.get(slackUrl, function (error, response, body) {
-    console.log("Error: ")
-    console.log(error)
-    console.log("Response: ")
-    console.log(response)
-    console.log("Body: ")
-    console.log(body)
-  })
+  // request.get(slackUrl, function (error, response, body) {
+  //   console.log("Error: ")
+  //   console.log(error)
+  //   console.log("Response: ")
+  //   console.log(response)
+  //   console.log("Body: ")
+  //   console.log(body)
+  // })
 
   var intent = req.body.result.metadata.intentName
   var response
