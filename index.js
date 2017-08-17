@@ -55,7 +55,6 @@ app.post("/handler", function (req, res) {
   console.log("stringified original slack request")
   console.log(JSON.stringify(original))
 
-  // TO DO : fields returns undefined
   // The type of the ticket is stored here
   console.log(original.data.event.attachments[0].fields)
 
@@ -90,12 +89,12 @@ app.post("/handler", function (req, res) {
   }
 
   if(original.data.event.attachments){
-    // if(original.data.event.attachments.fields[0].value="Blocker"){
-    //   response="*Blocker Found*"
-    // }
-    // else{
+    if(original.data.event.attachments[0].fields[0].value="Blocker"){
+      response="*Blocker Found*"
+    }
+    else{
       response="Attachment Found"
-    // }
+    }
   }
 
   res.send(response)
