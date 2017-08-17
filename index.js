@@ -45,6 +45,13 @@ app.use(function (req, res, next) {
   next()
 })
 
+app.post("/jira", function (req, res) {
+  console.log("Hitting JIRA webhook")
+  console.log("req.body")
+  console.log(req.body)
+  res.send("Success")
+})
+
 app.post("/handler", function (req, res) {
   console.log("Hitting API.AI webhook")
   console.log("req.body")
@@ -64,8 +71,6 @@ app.post("/handler", function (req, res) {
   request.get(slackUrl, function (error, response, body) {
     console.log("Error: ")
     console.log(error)
-    console.log("Response: ")
-    console.log(response)
     console.log("Body: ")
     console.log(body)
   })
