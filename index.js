@@ -88,7 +88,7 @@ app.post("/handler", function (req, res) {
     response = { speech: req.body.result.fulfillment.speech }
   }
 
-  if(original.data.event.attachments){
+  if(original.data.event.attachments.length>0){
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       response="*Blocker Found*"
     }
