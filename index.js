@@ -49,6 +49,8 @@ app.post("/jira", function (req, res) {
   console.log("Hitting JIRA webhook")
   console.log("req.body")
   console.log(req.body)
+  console.log("\n\nChangelog:")
+  console.log(JSON.stringify(req.body.changelog, null, 2))
   res.send("Success")
 })
 
