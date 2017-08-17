@@ -57,7 +57,7 @@ app.post("/handler", function (req, res) {
 
   // TO DO : fields returns undefined
   // The type of the ticket is stored here
-  console.log(original.data.event.attachments.fields)
+  // console.log(original.data.event.attachments.fields)
 
   var slackBlob = original.data
   var slackToken = slackBlob.token
