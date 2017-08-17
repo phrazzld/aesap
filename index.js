@@ -92,7 +92,7 @@ app.post("/handler", function (req, res) {
         "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
       )
     } else {
-      response = { speech: req.body.result.fulfillment.speech }
+      response = { speech: "Sorry, could you say that again?" }
     }
   }
 
