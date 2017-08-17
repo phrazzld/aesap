@@ -79,6 +79,7 @@ app.post("/handler", function (req, res) {
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       console.log("blocker found")
       response="*Blocker Found*"
+      res.send("Blocker")
     }
     else{
       response="Attachment Found"
