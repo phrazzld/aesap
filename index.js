@@ -75,16 +75,6 @@ app.post("/handler", function (req, res) {
   var intent = req.body.result.metadata.intentName
   var response
 
-  if (intent === "Gif") {
-    console.log("issa jif?");
-    response = sendGif(
-      "doh!",
-      "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
-    )
-  } else {
-    response = { speech: req.body.result.fulfillment.speech }
-  }
-
   if(original.data.event.attachments){
     if(original.data.event.attachments[0].fields[0].value="Blocker"){
       console.log("blocker found")
@@ -94,6 +84,18 @@ app.post("/handler", function (req, res) {
       response="Attachment Found"
     }
   }
+  else{
+    if (intent === "Gif") {
+      console.log("issa jif?");
+      response = sendGif(
+        "doh!",
+        "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
+      )
+    } else {
+      response = { speech: req.body.result.fulfillment.speech }
+    }
+  }
+
 
   res.send(response)
 })
