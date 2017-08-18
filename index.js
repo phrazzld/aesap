@@ -103,6 +103,16 @@ app.post("/handler", function (req, res) {
         "doh!",
         "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
       )
+    }
+    else if (intent === "Test") {
+      console.log("tested");
+      response = {
+        data:{
+          slack:{
+            text:"yoyoyo"
+          }
+        }
+      }
     } else {
       response = { speech: req.body.result.fulfillment.speech }
     }
