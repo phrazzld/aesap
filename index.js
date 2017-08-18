@@ -109,6 +109,7 @@ app.post("/handler", function (req, res) {
       response = {
         data:{
           slack:{
+            channel:"C6B8SQWT0"
             text:"yoyoyo"
           }
         }
