@@ -50,7 +50,7 @@ app.post("/jira", function (req, res) {
   console.log("req.body")
   console.log(JSON.stringify(req.body, null, 2))
   console.log("\n Priority: ")
-  console.log(req.body.issue.fields.project.priority.name)
+  console.log(req.body.issue.fields.priority.name)
   res.send("Success")
 })
 
