@@ -49,6 +49,8 @@ app.post("/jira", function (req, res) {
   console.log("Hitting JIRA webhook")
   console.log("req.body")
   console.log(JSON.stringify(req.body, null, 2))
+  console.log("\n Priority: ")
+  console.log(req.body.issue.fields.project.priority.name)
   res.send("Success")
 })
 
@@ -103,17 +105,6 @@ app.post("/handler", function (req, res) {
         "doh!",
         "http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif"
       )
-    }
-    else if (intent === "Test") {
-      console.log("tested");
-      response = {
-        data:{
-          slack:{
-            channel:"C6B8SQWT0",
-            text:"yoyoyo"
-          }
-        }
-      }
     } else {
       response = { speech: req.body.result.fulfillment.speech }
     }
