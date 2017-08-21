@@ -5,7 +5,7 @@ var sanitizer = require("express-sanitizer")
 var bodyParser = require("body-parser")
 var config = require("./config")
 var request = require("request")
-var slackClient = require("slack")
+var webClient = require('@slack/client').WebClient;
 
 // middleware
 app.use(bodyParser.json())
@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
 // testing
-slackClient.api.test({hello:'world'}, console.log)
+var token = config.slack
 
 
 // functions
@@ -55,6 +55,12 @@ app.post("/jira", function (req, res) {
   console.log(JSON.stringify(req.body, null, 2))
   console.log("\n Priority: ")
   console.log(req.body.issue.fields.priority.name)
+  res.send("Success")
+})
+
+app.get("/jira",function(req,res){
+  console.log("Code sent:")
+  console.log(req.query)
   res.send("Success")
 })
 
