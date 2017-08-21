@@ -10,10 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@slack/client": "^3.11.0",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-sanitizer": "^1.0.2",
-    "request": "^2.81.0",
-    "slack": "^8.3.1"
+    "request": "^2.81.0"
   }
 }
