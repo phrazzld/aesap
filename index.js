@@ -60,7 +60,7 @@ app.post("/jira", function (req, res) {
 
 app.get("/jira",function(req,res){
   console.log("Code sent:")
-  console.log(req.query)
+  console.log(req)
   res.send("Success")
 })
 
