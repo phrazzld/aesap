@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
 // testing
-slack.api.test({hello:'world'}, console.log)
+slackClient.api.test({hello:'world'}, console.log)
 
 
 // functions
