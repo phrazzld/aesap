@@ -5,11 +5,15 @@ var sanitizer = require("express-sanitizer")
 var bodyParser = require("body-parser")
 var config = require("./config")
 var request = require("request")
+var slackClient = require("slack")
 
 // middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
+
+// testing
+slack.api.test({hello:'world'}, console.log)
 
 
 // functions
