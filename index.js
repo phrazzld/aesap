@@ -13,8 +13,19 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
 // testing
+// botlab = C6B8SQWT0
+
 var token = config.slackTeam || ''
 var web = new webClient(token)
+
+web.chat.postMessage('C6B8SQWT0','Can you hear me?',function(err,res){
+  if(err){
+    console.log(err)
+  } else{
+    console.log('Message Sent: ', res)
+  }
+})
+
 
 
 // functions
