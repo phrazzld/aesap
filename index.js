@@ -13,7 +13,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
 // testing
-var token = config.slack
+var token = config.slackTeam || ''
+var web = new webClient(token)
 
 
 // functions
