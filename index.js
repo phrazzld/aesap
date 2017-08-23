@@ -14,11 +14,12 @@ app.use(sanitizer())
 
 // testing
 // botlab = C6B8SQWT0
+// group-blockers = C4J7N1MEC
 
 var token = config.slackTeam || ''
 var web = new webClient(token)
 
-web.chat.postMessage('C6B8SQWT0','Can you hear me?',function(err,res){
+web.chat.postMessage('C6B8SQWT0',{text:"yoyoyo"},function(err,res){
   if(err){
     console.log(err)
   } else{
@@ -62,17 +63,15 @@ app.use(function (req, res, next) {
 })
 
 app.post("/jira", function (req, res) {
+  var priority=req.body.issue.fields.priority.name || ""
   console.log("Hitting JIRA webhook")
   console.log("req.body")
   console.log(JSON.stringify(req.body, null, 2))
   console.log("\n Priority: ")
-  console.log(req.body.issue.fields.priority.name)
-  res.send("Success")
-})
-
-app.get("/jira",function(req,res){
-  console.log("Code sent:")
-  console.log(req)
+  console.log(priority)
+  if(priority=="Minor"){
+    web.chat.postMessage("C6B8SQWT0","Minor Issue Found")
+  }
   res.send("Success")
 })
 
