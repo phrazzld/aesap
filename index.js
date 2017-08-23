@@ -19,16 +19,6 @@ app.use(sanitizer())
 var token = config.slackTeam || ''
 var web = new webClient(token)
 
-web.chat.postMessage('C6B8SQWT0',{text:"yoyoyo",attachments:{}},function(err,res){
-  if(err){
-    console.log(err)
-  } else{
-    console.log('Message Sent: ', res)
-  }
-})
-
-
-
 // functions
 var colors = ["#EB4D5C","#007AB8","#000","#4D394B","#FAD529","#298FC3"];
 
@@ -69,8 +59,12 @@ app.post("/jira", function (req, res) {
   console.log(JSON.stringify(req.body, null, 2))
   console.log("\n Priority: ")
   console.log(priority)
+  console.log("\n Info: ")
+  console.log(req.body.issue.key)
+  console.log(req.body.user.displayName)
+  console.log(req.body.issue.fields.description)
   if(priority=="Minor"){
-    web.chat.postMessage("C6B8SQWT0","Minor Issue Found")
+    web.chat.postMessage("C6B8SQWT0","Minor Issue Found ()")
   }
   res.send("Success")
 })
