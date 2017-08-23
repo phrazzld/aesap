@@ -19,7 +19,7 @@ app.use(sanitizer())
 var token = config.slackTeam || ''
 var web = new webClient(token)
 
-web.chat.postMessage('C6B8SQWT0',{text:"yoyoyo"},function(err,res){
+web.chat.postMessage('C6B8SQWT0',"yoyoyo",function(err,res){
   if(err){
     console.log(err)
   } else{
