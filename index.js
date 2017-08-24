@@ -66,7 +66,7 @@ app.post('/jira', function (req, res) {
 
   if (priority === 'Minor') {
     web.chat.postMessage('C6B8SQWT0', 'Minor Issue found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-    web.chat.postMessage('C6B8SQWT0', "'" +  req.body.issue.fields.summary + "' - " + req.body.user.displayName)
+    setTimeout(web.chat.postMessage('C6B8SQWT0', "'" +  req.body.issue.fields.summary + "' - " + req.body.user.displayName),1500)
   }
   res.send('Success')
 })
