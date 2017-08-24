@@ -8,5 +8,6 @@ module.exports = {
   slackVerToken: process.env.SLACK_VERIFICATION_TOKEN,
   slackCliSecret: process.env.SLACK_CLIENT_SECRET,
   slackCliId: process.env.SLACK_CLIENT_ID,
-  slackTeam: process.env.SLACK_TEAM_TOKEN
+  slackTeam: process.env.SLACK_TEAM_TOKEN,
+  slackOAuth: process.env.SLACK_OAUTH_TOKEN
 }
