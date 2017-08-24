@@ -18,7 +18,7 @@ app.use(sanitizer())
 
 var token = config.slackOAuth || ''
 var web = new WebClient(token)
-web.chat.postMessage("C6B8SQWT0", "Ollehgh it is me, yes... hello")
+web.chat.postMessage('C6B8SQWT0', 'Ollehgh it is me, yes... hello')
 
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
@@ -63,11 +63,27 @@ app.post('/jira', function (req, res) {
   console.log('\n Info: ')
   console.log(req.body.issue.key)
   console.log(req.body.user.displayName)
-  console.log(req.body.issue.fields.description)
 
   if (priority === 'Minor') {
-    web.chat.postMessage('C6B8SQWT0', 'Minor Issue found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-    setTimeout(function(){web.chat.postMessage('C6B8SQWT0', "'" +  req.body.issue.fields.summary + "' - " + req.body.user.displayName)},2500)
+    web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
+    setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
+  }
+  if (priority === 'Blocker') {
+    var event_type = req.body.issue_event_type_name
+    if (event_type === 'issue_created') {
+      // if the blocker is new, post it to the group-blockers channel
+      web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
+      setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
+    } else if (event_type === 'issue_updated') {
+      // if an event was updated, check whether or not it was updated to a blocker status
+      var items = req.body.changelog.items
+      for(i=0;i<items.length;i++){
+        if(items[i].toString === "Blocker"){
+          web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
+          setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
+        }
+      }
+    }
   }
   res.send('Success')
 })
