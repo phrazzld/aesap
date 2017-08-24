@@ -64,8 +64,8 @@ app.post("/jira", function (req, res) {
   console.log(req.body.user.displayName)
   console.log(req.body.issue.fields.description)
   if(priority=="Minor"){
-    web.chat.postMessage("C6B8SQWT0","Minor Issue found (" + req.body.issue.key + ")")
-    web.chat.postMessage("C6B8SQWT0","\'" + req.body.issue.fields.description + "\' - " + req.body.user.displayName)
+    web.chat.postMessage("C6B8SQWT0","Minor Issue "+req.body.issue.key+" found ()")
+    setTimeout(web.chat.postMessage("C6B8SQWT0","\'" + req.body.issue.fields.description + "\' - " + req.body.user.displayName),1000)
   }
   res.send("Success")
 })
