@@ -15,5 +15,8 @@
     "express": "^4.15.3",
     "express-sanitizer": "^1.0.2",
     "request": "^2.81.0"
+  },
+  "devDependencies": {
+    "standard": "^10.0.3"
   }
 }
