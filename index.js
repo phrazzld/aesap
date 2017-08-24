@@ -47,12 +47,15 @@ var sendGif = function (pretext, imageUrl, text) {
 function findChannel(channelName){
   var apiUrl='http://slack.com/api/channels.list?token='+token
   console.log("finding channel names... ")
-  var channels = request(apiUrl,function(err,res,body){
+  request(apiUrl,function(err,res,body){
     console.log("Error:", err)
     console.log("Response:", res && res.statusCode)
-    return body
+    filterChannels(channelName, body)
   })
-  console.log(JSON.stringify(channels, null, 2))
+}
+
+function filterChannels(channelName, body){
+  console.log(body);
 }
 
 findChannel("yo")
