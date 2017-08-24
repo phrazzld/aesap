@@ -44,6 +44,17 @@ var sendGif = function (pretext, imageUrl, text) {
   }
 }
 
+function findChannel(channelName){
+  var apiUrl='http://slack.com/api/channels.list?token='+token
+  request(apiUrl,function(err,res,body){
+    console.log("Error:", err)
+    console.log("Response:", res && res.statusCode)
+    console.log("Body: ", body)
+  })
+}
+
+findChannel("yo")
+
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -97,21 +108,6 @@ app.post('/handler', function (req, res) {
 
   console.log('stringified original slack request')
   console.log(JSON.stringify(original))
-
-  var slackBlob = original.data
-  var slackToken = slackBlob.token
-  var channelId = slackBlob.event.channel
-  var slackUrl = 'https://slack.com/api/channels.info?'
-  slackUrl += 'token=' + slackToken
-  slackUrl += '&channel=' + channelId
-
-  // Ping Slack API for channel info
-  request.get(slackUrl, function (error, response, body) {
-    console.log('Error: ')
-    console.log(error)
-    console.log('Body: ')
-    console.log(body)
-  })
 
   var intent = req.body.result.metadata.intentName
   var response
