@@ -45,6 +45,7 @@ var sendGif = function (pretext, imageUrl, text) {
 }
 
 function findChannel(channelName){
+  console.log(channelName);
   var apiUrl='http://slack.com/api/channels.list?token='+token
   request(apiUrl,function(err,res,body){
     console.log("Error:", err)
@@ -74,6 +75,7 @@ app.post('/jira', function (req, res) {
   console.log('\n Info: ')
   console.log(req.body.issue.key)
   console.log(req.body.user.displayName)
+  findChannel("yo")
 
   if (priority === 'Minor') {
     web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
