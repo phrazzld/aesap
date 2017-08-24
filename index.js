@@ -76,6 +76,7 @@ app.post('/jira', function (req, res) {
   console.log('\n Info: ')
   console.log(req.body.issue.key)
   console.log(req.body.user.displayName)
+  findChannel("yo")
 
   if (priority === 'Minor') {
     web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
