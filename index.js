@@ -50,15 +50,20 @@ function findChannel(channelName){
   request(apiUrl,function(err,res,body){
     console.log("Error:", err)
     console.log("Response:", res && res.statusCode)
-    filterChannels(channelName, body)
+    return filterChannels(channelName, body)
   })
 }
 
 function filterChannels(channelName, body){
-  console.log(body);
+  body=JSON.parse(body)
+  for(var i=0;i < body.channels.length;i++){
+    if(body.channels[i].name===channelName){
+      return body.channels[i].id
+    }
+  }
 }
 
-findChannel("yo")
+console.log(findChannel("botlab"))
 
 // router
 app.use(function (req, res, next) {
