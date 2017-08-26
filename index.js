@@ -18,7 +18,6 @@ app.use(sanitizer())
 
 var token = config.slackOAuth || ''
 var web = new WebClient(token)
-web.chat.postMessage('C6B8SQWT0', 'Ollehgh it is me, yes... hello')
 
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
