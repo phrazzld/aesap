@@ -41,7 +41,7 @@ function fetchGif (tag) {
   })
 }
 
-function sendGif (pretext, text, tag) {
+function sendGif (pretext, tag) {
   pretext = pretext || ''
   text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
@@ -56,8 +56,7 @@ function sendGif (pretext, text, tag) {
                   fallback: 'gif gif gif',
                   color: color,
                   pretext: pretext,
-                  image_url: gifUrl,
-                  text: text
+                  image_url: gifUrl
                 }
               ]
             }
@@ -238,7 +237,7 @@ function defineResponse (intent, speech) {
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
       console.log('We got a gif!')
-      sendGif('doh!', 'Random Homer GIF', 'Homer Simpson')
+      sendGif('doh!', 'Homer Simpson')
         .then(function (gifBlob) {
           console.log('Successfully got gifBlob')
           console.log(JSON.stringify(gifBlob, null, 2))
