@@ -14,7 +14,8 @@
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
     "express-sanitizer": "^1.0.2",
-    "request": "^2.81.0"
+    "request": "^2.81.0",
+    "twilio": "^3.6.5"
   },
   "devDependencies": {
     "standard": "^10.0.3"

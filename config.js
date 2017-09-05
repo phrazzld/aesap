@@ -9,5 +9,7 @@ module.exports = {
   slackCliSecret: process.env.SLACK_CLIENT_SECRET,
   slackCliId: process.env.SLACK_CLIENT_ID,
   slackTeam: process.env.SLACK_TEAM_TOKEN,
-  slackOAuth: process.env.SLACK_OAUTH_TOKEN
+  slackOAuth: process.env.SLACK_OAUTH_TOKEN,
+  twilioSid: process.env.TWILIO_SID,
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN
 }

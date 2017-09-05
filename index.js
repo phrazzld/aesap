@@ -6,6 +6,8 @@ var bodyParser = require('body-parser')
 var config = require('./config')
 var request = require('request')
 var WebClient = require('@slack/client').WebClient
+var twilio = require("twilio")
+var twilioClient = new twilio(config.twilioSid, config.twilioAuthToken)
 
 // middleware
 app.use(bodyParser.json())
@@ -64,6 +66,18 @@ function filterChannels(channelName, body){
 
 console.log(findChannel("botlab"))
 
+// Twilio integration
+function sendSMS(message, number){
+  twilioClient.messages.create({
+    body: message,
+    to: "+1"+number,
+    from: "+14152149232"
+  })
+  .then((message)=>
+    console.log(message.sid)
+  )
+}
+
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -85,10 +99,6 @@ app.post('/jira', function (req, res) {
   console.log(req.body.user.displayName)
   findChannel("yo")
 
-  if (priority === 'Minor') {
-    web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-    setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
-  }
   if (priority === 'Blocker') {
     var event_type = req.body.issue_event_type_name
     if (event_type === 'issue_created') {
@@ -106,6 +116,7 @@ app.post('/jira', function (req, res) {
       }
     }
   }
+  
   res.send('Success')
 })
 
