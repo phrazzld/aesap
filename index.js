@@ -20,6 +20,29 @@ var web = new WebClient(token)
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
+// Get a random gif by tag
+function fetchGif (tag) {
+  return new Promise(function (resolve, reject) {
+    var giphyUrl = 'https://api.giphy.com/v1/gifs/random?api_key='
+    giphyUrl += config.giphyApiKey
+    giphyUrl += '&tag=' + tag
+    request(giphyUrl, function (err, res, body) {
+      if (err) {
+        console.log('Promise rejected finding a random gif')
+        console.error(err)
+        reject(err)
+      } else {
+        console.log('Successfully found gif')
+        console.log(JSON.stringify(body, null, 2))
+        resolve('Success')
+      }
+    })
+  })
+}
+
+// Testing
+fetchGif('burrito')
+
 function sendGif (pretext, imageUrl, text) {
   pretext = pretext || ''
   text = text || ''
@@ -114,7 +137,7 @@ app.post('/jira', function (req, res) {
 function chunkJiraRequest (body) {
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
-    changes: body.changelog || [],
+    changes: body.changelog || { 'items': [] },
     user: body.user.displayName || 'No user',
     summary: body.issue.fields.summary || 'No summary',
     key: body.issue.key || 'No issue key',
