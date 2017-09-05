@@ -76,17 +76,24 @@ function filterChannels (channelName, body) {
 
 // Twilio integration
 function sendSMS(message, number){
-  twilioClient.messages.create({
-    body: message,
-    to: "+1"+number,
-    from: "+14152149232"
-  })
-  .then((message)=>
-    console.log(message.sid)
-  )
+  if(Array.isArray(number)){
+    for(var i =0; i < number.length; i++){
+      twilioClient.messages.create({
+        body: message,
+        to: "+1"+number[i],
+        from: "+14152149232"
+      })
+    }
+  } else{
+    twilioClient.messages.create({
+      body: message,
+      to: "+1"+number,
+      from: "+14152149232"
+    })
+  }
 }
 
-sendSMS("yoyoyo","4154056035")
+sendSMS("yoyoyo",["4154056035","4154056035"])
 
 // router
 app.use(function (req, res, next) {
