@@ -93,7 +93,7 @@ function sendSMS(message, number){
   }
 }
 
-sendSMS("yoyoyo",["4154056035","4154056035"])
+sendSMS("yoyoyo","4154056035")
 
 // router
 app.use(function (req, res, next) {
