@@ -26,6 +26,7 @@ function fetchGif (tag) {
     var giphyUrl = 'https://api.giphy.com/v1/gifs/random?api_key='
     giphyUrl += config.giphyApiKey
     giphyUrl += '&tag=' + tag
+    giphyUrl += '&rating=g'
     request(giphyUrl, function (err, res, body) {
       if (err) {
         console.log('Promise rejected finding a random gif')
@@ -34,7 +35,7 @@ function fetchGif (tag) {
       } else {
         console.log('Successfully found gif')
         console.log(JSON.stringify(body, null, 2))
-        resolve('Success')
+        resolve(body.data.url)
       }
     })
   })
@@ -43,27 +44,37 @@ function fetchGif (tag) {
 // Testing
 fetchGif('burrito')
 
-function sendGif (pretext, imageUrl, text) {
+function sendGif (pretext, imageUrl, text, tag) {
   pretext = pretext || ''
   text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
-  var response = {
-    data: {
-      slack: {
-        attachments: [
-          {
-            fallback: 'gif gif gif',
-            color: color,
-            pretext: pretext,
-            image_url: imageUrl,
-            text: text
+  return new Promise(function (resolve, reject) {
+    fetchGif(tag)
+      .then(function (gifUrl) {
+        var response = {
+          data: {
+            slack: {
+              attachments: [
+                {
+                  fallback: 'gif gif gif',
+                  color: color,
+                  pretext: pretext,
+                  image_url: imageUrl,
+                  text: text
+                }
+              ]
+            }
           }
-        ]
-      }
-    }
-  }
-  console.log(JSON.stringify(response, null, 2))
-  return response
+        }
+        console.log(JSON.stringify(response, null, 2))
+        resolve(response)
+      })
+      .catch(function (reason) {
+        console.log('Promise rejected fetching gif with tag ' + tag)
+        console.error(reason)
+        reject(reason)
+      })
+  })
 }
 
 function findChannel (channelName) {
@@ -210,21 +221,31 @@ function postBlockerIssue (user, issueKey, summary) {
 
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
-  var original = req.body.originalRequest
-  console.log('stringified original slack request')
-  console.log(JSON.stringify(original, null, 2))
   var intent = req.body.result.metadata.intentName
   var response
   if (intent === 'Gif') {
     console.log('issa jif?')
-    response = sendGif(
+    sendGif(
       'doh!',
-      'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
+      'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif',
+      'Homer Simpson random gif, from Giphy',
+      'homer simpson'
     )
+      .then(function (gifBlob) {
+        response = gifBlob
+        res.send(response)
+      })
+      .catch(function (reason) {
+        console.log('Promise rejected in /handler sendGif call')
+        console.error(reason)
+        res.send('Failure!')
+      })
   } else {
-    response = { speech: req.body.result.fulfillment.speech }
+    response = {
+      speech: req.body.result.fulfillment.speech
+    }
+    res.send(response)
   }
-  res.send(response)
 })
 
 app.listen(config.port, function (req, res) {
