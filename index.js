@@ -35,7 +35,7 @@ function fetchGif (tag) {
       } else {
         console.log('Successfully found gif')
         console.log(JSON.stringify(body, null, 2))
-        resolve(body.data.url)
+        resolve(body.url)
       }
     })
   })
