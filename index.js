@@ -37,6 +37,10 @@ function fetchGif (tag) {
         console.log(JSON.stringify(body, null, 2))
         console.log('body.url')
         console.log(body.url)
+        console.log('body.data')
+        console.log(JSON.stringify(body.data, null, 2))
+        console.log('res')
+        console.log(JSON.stringify(res, null, 2))
         resolve(body.url)
       }
     })
