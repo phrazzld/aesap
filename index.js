@@ -86,18 +86,19 @@ app.post('/jira', function (req, res) {
   console.log(JSON.stringify(req.body, null, 2))
   var blob = chunkJiraRequest(req.body)
   handleBlockerIssue(blob)
+  handleDeploys(blob)
   res.send('Success')
 })
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
   var blob = {
-    priority: body.issue.fields.priority.name,
-    changes: body.changelog,
-    user: body.user.displayName,
-    summary: body.issue.fields.summary,
-    key: body.issue.key,
-    eventType: body.issue_event_type_name
+    priority: body.issue.fields.priority.name || 'No priority',
+    changes: body.changelog || [],
+    user: body.user.displayName || 'No user',
+    summary: body.issue.fields.summary || 'No summary',
+    key: body.issue.key || 'No issue key',
+    eventType: body.issue_event_type_name || 'No event type'
   }
   return blob
 }
@@ -120,14 +121,33 @@ function handleBlockerIssue (blob) {
   }
 }
 
-  /*
 // Check for issues going live
-function handleDeployments (blob) {
+function handleDeploys (blob) {
   for (var i = 0; i < blob.changes.items.length; i++) {
-    if (blob.changes.items[i].
-    */
+    if (blob.changes.items[i].field === 'status' &&
+      blob.changes.items[i].toString === 'Live') {
+      postDeployedIssue(blob.key, blob.summary)
+    }
+  }
+}
 
-// Post blocker issue to group-blockers channel
+// Post issues to #deployments as they go live
+function postDeployedIssue (issueKey, summary) {
+  findChannel('deployments')
+    .then(function (channelId) {
+      console.log('Found deployments channel, id: ' + channelId)
+      web.chat.postMessage(channelId,
+        '*' + issueKey + ' deployed*' + '\n' +
+        summary
+      )
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected finding channel deployments')
+      console.error(reason)
+    })
+}
+
+// Post blocker issue to #group-blockers
 function postBlockerIssue (user, issueKey, summary) {
   findChannel('group-blockers')
     .then(function (channelId) {
