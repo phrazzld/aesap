@@ -85,6 +85,9 @@ function sendSMS(message, number){
     console.log(message.sid)
   )
 }
+
+sendSMS("yoyoyo","4154056035")
+
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
