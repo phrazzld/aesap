@@ -44,7 +44,7 @@ function fetchGif (tag) {
 // Testing
 fetchGif('burrito')
 
-function sendGif (pretext, imageUrl, text, tag) {
+function sendGif (pretext, text, tag) {
   pretext = pretext || ''
   text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
@@ -59,7 +59,7 @@ function sendGif (pretext, imageUrl, text, tag) {
                   fallback: 'gif gif gif',
                   color: color,
                   pretext: pretext,
-                  image_url: imageUrl,
+                  image_url: gifUrl,
                   text: text
                 }
               ]
@@ -222,31 +222,45 @@ function postBlockerIssue (user, issueKey, summary) {
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
   var intent = req.body.result.metadata.intentName
-  var response
-  if (intent === 'Gif') {
-    console.log('issa jif?')
-    sendGif(
-      'doh!',
-      'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif',
-      'Homer Simpson random gif, from Giphy',
-      'homer simpson'
-    )
-      .then(function (gifBlob) {
-        response = gifBlob
-        res.send(response)
-      })
-      .catch(function (reason) {
-        console.log('Promise rejected in /handler sendGif call')
-        console.error(reason)
-        res.send('Failure!')
-      })
-  } else {
-    response = {
-      speech: req.body.result.fulfillment.speech
-    }
-    res.send(response)
-  }
+  var speech = req.body.result.fulfillment.speech
+  defineResponse(intent, speech)
+    .then(function (result) {
+      console.log('Successfully defined response')
+      console.log(result)
+      res.send(result)
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected in defineResponse')
+      console.error(reason)
+    })
 })
+
+// Define response object for API.AI webhook
+function defineResponse (intent, speech) {
+  var response
+  return new Promise(function (resolve, reject) {
+    if (intent === 'Gif') {
+      console.log('We got a gif!')
+      sendGif('doh!', 'Random Homer GIF', 'Homer Simpson')
+        .then(function (gifBlob) {
+          console.log('Successfully got gifBlob')
+          console.log(JSON.stringify(gifBlob, null, 2))
+          response = gifBlob
+          resolve(response)
+        })
+        .catch(function (reason) {
+          console.log('Promise rejected in sendGif call in defineResponse')
+          console.error(reason)
+          reject(reason)
+        })
+    } else {
+      response = {
+        speech: speech
+      }
+      resolve(response)
+    }
+  })
+}
 
 app.listen(config.port, function (req, res) {
   console.log('Port ' + config.port + ': "Whirrr..."')
