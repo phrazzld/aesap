@@ -35,14 +35,13 @@ function fetchGif (tag) {
       } else {
         console.log('Successfully found gif')
         console.log(JSON.stringify(body, null, 2))
+        console.log('body.url')
+        console.log(body.url)
         resolve(body.url)
       }
     })
   })
 }
-
-// Testing
-fetchGif('burrito')
 
 function sendGif (pretext, text, tag) {
   pretext = pretext || ''
@@ -226,7 +225,7 @@ app.post('/handler', function (req, res) {
   defineResponse(intent, speech)
     .then(function (result) {
       console.log('Successfully defined response')
-      console.log(result)
+      console.log(JSON.stringify(result, null, 2))
       res.send(result)
     })
     .catch(function (reason) {
