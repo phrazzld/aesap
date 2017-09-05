@@ -131,7 +131,7 @@ function handleBlockerIssue (blob) {
 
 // Post blocker issue to group-blockers channel
 function postBlockerIssue (user, issueKey, summary) {
-  findChannel('botlab')
+  findChannel('group-blockers')
     .then(function (channelId) {
       console.log('Found group-blockers channel, id: ' + channelId)
       // Found the channel, let's post to it
