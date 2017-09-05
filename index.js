@@ -35,7 +35,7 @@ function fetchGif (tag) {
       } else {
         console.log('Successfully found gif')
         // Blob returned as a string, gotta parse into JSON
-        resolve(JSON.parse(body).data.url)
+        resolve(JSON.parse(body).data.url.toString())
       }
     })
   })
@@ -57,8 +57,7 @@ function sendGif (pretext, tag) {
                   fallback: 'gif gif gif',
                   color: color,
                   pretext: pretext,
-                  //image_url: gifUrl
-                  image_url: 'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
+                  image_url: gifUrl
                 }
               ]
             }
