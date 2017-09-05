@@ -55,7 +55,8 @@ function sendGif (pretext, tag) {
                   fallback: 'gif gif gif',
                   color: color,
                   pretext: pretext,
-                  image_url: gifUrl
+                  //image_url: gifUrl
+                  image_url: 'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
                 }
               ]
             }
@@ -132,7 +133,6 @@ app.use(function (req, res, next) {
 
 app.post('/jira', function (req, res) {
   console.log('Hitting JIRA webhook')
-  console.log(JSON.stringify(req.body, null, 2))
   var blob = chunkJiraRequest(req.body)
   handleBlockerIssue(blob)
   handleDeploys(blob)
