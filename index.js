@@ -249,6 +249,8 @@ function defineResponse (intent, speech) {
           console.error(reason)
           reject(reason)
         })
+    } else if (intent.indexOf('fallback') > -1) {
+      resolve(null)
     } else {
       response = {
         speech: speech
