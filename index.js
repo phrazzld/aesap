@@ -43,7 +43,6 @@ function fetchGif (tag) {
 
 function sendGif (pretext, tag) {
   pretext = pretext || ''
-  text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
   return new Promise(function (resolve, reject) {
     fetchGif(tag)
