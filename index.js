@@ -137,8 +137,8 @@ function postBlockerIssue (user, issueKey, summary) {
       // Found the channel, let's post to it
       web.chat.postMessage(channelId,
         '*' + user + ' found a blocker!*\n' +
-        'https://asapconnected.atlassian.net/browse/' + issueKey +
-        '\n*Issue: *' + summary + ' (' + issueKey + ')'
+        'https://asapconnected.atlassian.net/browse/' + issueKey + '\n' +
+        '*Issue:* ' + summary + ' (' + issueKey + ')'
       )
     })
     .catch(function (reason) {
