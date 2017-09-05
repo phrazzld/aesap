@@ -21,14 +21,10 @@ var web = new WebClient(token)
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
 function sendGif (pretext, imageUrl, text) {
-  console.log('sendGif')
-  console.log('pretext: ' + pretext)
-  console.log('imageUrl: ' + imageUrl)
-  console.log('text: ' + text)
   pretext = pretext || ''
   text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
-  return {
+  var response = {
     data: {
       slack: {
         attachments: [
@@ -43,6 +39,8 @@ function sendGif (pretext, imageUrl, text) {
       }
     }
   }
+  console.log(JSON.stringify(response, null, 2))
+  return response
 }
 
 function findChannel (channelName) {
