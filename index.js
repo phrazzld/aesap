@@ -93,6 +93,7 @@ app.use(function (req, res, next) {
 
 app.post('/jira', function (req, res) {
   console.log('Hitting JIRA webhook')
+  console.log(req.body)
   var blob = chunkJiraRequest(req.body)
   handleBlockerIssue(blob)
   res.send('Success')
@@ -128,6 +129,13 @@ function handleBlockerIssue (blob) {
     console.log(blob.priority + ' is not a blocker')
   }
 }
+
+  /*
+// Check for issues going live
+function handleDeployments (blob) {
+  for (var i = 0; i < blob.changes.items.length; i++) {
+    if (blob.changes.items[i].
+    */
 
 // Post blocker issue to group-blockers channel
 function postBlockerIssue (user, issueKey, summary) {
