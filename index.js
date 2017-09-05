@@ -47,6 +47,8 @@ function sendGif (pretext, tag) {
   return new Promise(function (resolve, reject) {
     fetchGif(tag)
       .then(function (gifUrl) {
+        console.log('gifUrl:')
+        console.log(gifUrl)
         var response = {
           data: {
             slack: {
