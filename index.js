@@ -35,7 +35,7 @@ function fetchGif (tag) {
       } else {
         console.log('Successfully found gif')
         // Blob returned as a string, gotta parse into JSON
-        resolve(JSON.parse(body).data.url.toString())
+        resolve(JSON.parse(body).data.image_url)
       }
     })
   })
