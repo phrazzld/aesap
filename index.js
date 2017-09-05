@@ -47,8 +47,6 @@ function sendGif (pretext, tag) {
   return new Promise(function (resolve, reject) {
     fetchGif(tag)
       .then(function (gifUrl) {
-        console.log('gifUrl:')
-        console.log(gifUrl)
         var response = {
           data: {
             slack: {
@@ -63,7 +61,6 @@ function sendGif (pretext, tag) {
             }
           }
         }
-        console.log(JSON.stringify(response, null, 2))
         resolve(response)
       })
       .catch(function (reason) {
@@ -142,6 +139,7 @@ app.post('/jira', function (req, res) {
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
+  body.issue = body.issue || { 'fields': { 'summary': null, 'priority': { 'name': null } } }
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
     changes: body.changelog || { 'items': [] },
@@ -239,8 +237,6 @@ function defineResponse (intent, speech) {
       console.log('We got a gif!')
       sendGif('doh!', 'Homer Simpson')
         .then(function (gifBlob) {
-          console.log('Successfully got gifBlob')
-          console.log(JSON.stringify(gifBlob, null, 2))
           response = gifBlob
           resolve(response)
         })
@@ -249,8 +245,6 @@ function defineResponse (intent, speech) {
           console.error(reason)
           reject(reason)
         })
-    } else if (intent.toLowerCase().indexOf('fallback') > -1) {
-      resolve(null)
     } else {
       response = {
         speech: speech
