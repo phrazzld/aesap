@@ -72,16 +72,6 @@ function filterChannels (channelName, body) {
   }
 }
 
-// Testing promises
-findChannel('botlab')
-  .then(function (result) {
-    console.log('Much success finding botlab channel, id: ' + result)
-  })
-  .catch(function (reason) {
-    console.log('Oops, no success')
-    console.error(reason)
-  })
-
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -93,7 +83,7 @@ app.use(function (req, res, next) {
 
 app.post('/jira', function (req, res) {
   console.log('Hitting JIRA webhook')
-  console.log(req.body)
+  console.log(JSON.stringify(req.body, null, 2))
   var blob = chunkJiraRequest(req.body)
   handleBlockerIssue(blob)
   res.send('Success')
