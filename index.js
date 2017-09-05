@@ -46,16 +46,29 @@ var sendGif = function (pretext, imageUrl, text) {
 function findChannel (channelName) {
   var apiUrl = 'http://slack.com/api/channels.list?token=' + token
   console.log('finding channel names... ')
-  request(apiUrl, function (err, res, body) {
-    console.log('Error:', err)
-    console.log('Response:', res && res.statusCode)
-    return filterChannels(channelName, body)
+  return new Promise(function (resolve, reject) {
+    request(apiUrl, function (err, res, body) {
+      console.log('Error:', err)
+      console.log('Response:', res && res.statusCode)
+      if (err) {
+        console.log('Promise rejected finding channel names')
+        console.error(err)
+        reject(err)
+      } else {
+        var channelId = filterChannels(channelName, body)
+        console.log('Found channelId: ' + channelId)
+        resolve(channelId)
+      }
+    })
   })
 }
 
 function filterChannels (channelName, body) {
+  console.log('-- filterChannels --')
+  console.log('channelName: ' + channelName)
   body = JSON.parse(body)
   for (var i = 0; i < body.channels.length; i++) {
+    console.log('checking against body.channels[i].name: ' + body.channels[i].name)
     if (body.channels[i].name === channelName) {
       return body.channels[i].id
     }
@@ -63,6 +76,16 @@ function filterChannels (channelName, body) {
 }
 
 console.log(findChannel('botlab'))
+
+// Testing promises
+findChannel('botlab')
+  .then(function (result) {
+    console.log('Much success finding botlab channel, id: ' + result)
+  })
+  .catch(function (reason) {
+    console.log('Oops, no success')
+    console.error(reason)
+  })
 
 // router
 app.use(function (req, res, next) {
@@ -111,17 +134,11 @@ app.post('/jira', function (req, res) {
 
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
-  // console.log("req.body")
-  // console.log(req.body)
-
   var original = req.body.originalRequest
-
   console.log('stringified original slack request')
   console.log(JSON.stringify(original))
-
   var intent = req.body.result.metadata.intentName
   var response
-
   if (original.data.event.attachments) {
     if (original.data.event.attachments[0].fields[0].value === 'Blocker') {
       console.log('blocker found')
@@ -147,7 +164,6 @@ app.post('/handler', function (req, res) {
       response = { speech: req.body.result.fulfillment.speech }
     }
   }
-
   res.send(response)
 })
 
