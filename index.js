@@ -48,8 +48,6 @@ function findChannel (channelName) {
   console.log('finding channel names... ')
   return new Promise(function (resolve, reject) {
     request(apiUrl, function (err, res, body) {
-      console.log('Error:', err)
-      console.log('Response:', res && res.statusCode)
       if (err) {
         console.log('Promise rejected finding channel names')
         console.error(err)
@@ -68,14 +66,11 @@ function filterChannels (channelName, body) {
   console.log('channelName: ' + channelName)
   body = JSON.parse(body)
   for (var i = 0; i < body.channels.length; i++) {
-    console.log('checking against body.channels[i].name: ' + body.channels[i].name)
     if (body.channels[i].name === channelName) {
       return body.channels[i].id
     }
   }
 }
-
-console.log(findChannel('botlab'))
 
 // Testing promises
 findChannel('botlab')
@@ -97,40 +92,61 @@ app.use(function (req, res, next) {
 })
 
 app.post('/jira', function (req, res) {
-  var priority = req.body.issue.fields.priority.name || ''
   console.log('Hitting JIRA webhook')
-  console.log('req.body')
-  console.log(JSON.stringify(req.body, null, 2))
-  console.log('\n Priority: ')
-  console.log(priority)
-  console.log('\n Info: ')
-  console.log(req.body.issue.key)
-  console.log(req.body.user.displayName)
-  findChannel('yo')
+  var blob = chunkJiraRequest(req.body)
+  handleBlockerIssue(blob)
+  res.send('Success')
+})
 
-  if (priority === 'Minor') {
-    web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-    setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
+// Make JIRA request body more manageable
+function chunkJiraRequest (body) {
+  var blob = {
+    priority: body.issue.fields.priority.name,
+    changes: body.changelog,
+    user: body.user.displayName,
+    summary: body.issue.fields.summary,
+    key: body.issue.key,
+    eventType: body.issue_event_type_name
   }
-  if (priority === 'Blocker') {
-    var event_type = req.body.issue_event_type_name
-    if (event_type === 'issue_created') {
-      // if the blocker is new, post it to the group-blockers channel
-      web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-      setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
-    } else if (event_type === 'issue_updated') {
-      // if an event was updated, check whether or not it was updated to a blocker status
-      var items = req.body.changelog.items
-      for (var i = 0; i < items.length; i++) {
-        if (items[i].toString === 'Blocker') {
-          web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-          setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
+  return blob
+}
+
+// Check for blockers
+function handleBlockerIssue (blob) {
+  if (blob.priority === 'Blocker') {
+    if (blob.eventType === 'issue_created') {
+      postBlockerIssue(blob.user, blob.key, blob.summary)
+    } else if (blob.eventType === 'issue_updated') {
+      for (var i = 0; i < blob.changes.items.length; i++) {
+        if (blob.changes.items[i].toString === 'Blocker') {
+          postBlockerIssue(blob.user, blob.key, blob.summary)
+          break
         }
       }
     }
+  } else {
+    console.log(blob.priority + ' is not a blocker')
   }
-  res.send('Success')
-})
+}
+
+// Post blocker issue to group-blockers channel
+function postBlockerIssue (user, issueKey, summary) {
+  findChannel('botlab')
+    .then(function (channelId) {
+      console.log('Found group-blockers channel, id: ' + channelId)
+      // Found the channel, let's post to it
+      web.chat.postMessage(channelId,
+        'Blocker Found!\n' +
+        'https://asapconnected.atlassian.net/browse/' + issueKey +
+        '\n' + summary +
+        '\nMade a blocker by ' + user
+      )
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected finding channel group-blockers')
+      console.error(reason)
+    })
+}
 
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
