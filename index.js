@@ -136,10 +136,9 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Found group-blockers channel, id: ' + channelId)
       // Found the channel, let's post to it
       web.chat.postMessage(channelId,
-        'Blocker Found!\n' +
+        '*' + user + ' found a blocker!*\n' +
         'https://asapconnected.atlassian.net/browse/' + issueKey +
-        '\n' + summary +
-        '\nMade a blocker by ' + user
+        '\n*Issue: *' + summary + ' (' + issueKey + ')'
       )
     })
     .catch(function (reason) {
