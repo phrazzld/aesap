@@ -45,26 +45,34 @@ var sendGif = function (pretext, imageUrl, text) {
   }
 }
 
-function findChannel(channelName){
-  var apiUrl='http://slack.com/api/channels.list?token='+token
-  console.log("finding channel names... ")
-  request(apiUrl,function(err,res,body){
-    console.log("Error:", err)
-    console.log("Response:", res && res.statusCode)
-    return filterChannels(channelName, body)
+function findChannel (channelName) {
+  var apiUrl = 'http://slack.com/api/channels.list?token=' + token
+  console.log('finding channel names... ')
+  return new Promise(function (resolve, reject) {
+    request(apiUrl, function (err, res, body) {
+      if (err) {
+        console.log('Promise rejected finding channel names')
+        console.error(err)
+        reject(err)
+      } else {
+        var channelId = filterChannels(channelName, body)
+        console.log('Found channelId: ' + channelId)
+        resolve(channelId)
+      }
+    })
   })
 }
 
-function filterChannels(channelName, body){
-  body=JSON.parse(body)
-  for(var i=0;i < body.channels.length;i++){
-    if(body.channels[i].name===channelName){
+function filterChannels (channelName, body) {
+  console.log('-- filterChannels --')
+  console.log('channelName: ' + channelName)
+  body = JSON.parse(body)
+  for (var i = 0; i < body.channels.length; i++) {
+    if (body.channels[i].name === channelName) {
       return body.channels[i].id
     }
   }
 }
-
-console.log(findChannel("botlab"))
 
 // Twilio integration
 function sendSMS(message, number){
@@ -77,7 +85,6 @@ function sendSMS(message, number){
     console.log(message.sid)
   )
 }
-
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -88,51 +95,96 @@ app.use(function (req, res, next) {
 })
 
 app.post('/jira', function (req, res) {
-  var priority = req.body.issue.fields.priority.name || ''
   console.log('Hitting JIRA webhook')
-  console.log('req.body')
   console.log(JSON.stringify(req.body, null, 2))
-  console.log('\n Priority: ')
-  console.log(priority)
-  console.log('\n Info: ')
-  console.log(req.body.issue.key)
-  console.log(req.body.user.displayName)
-  findChannel("yo")
-
-  if (priority === 'Blocker') {
-    var event_type = req.body.issue_event_type_name
-    if (event_type === 'issue_created') {
-      // if the blocker is new, post it to the group-blockers channel
-      web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-      setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
-    } else if (event_type === 'issue_updated') {
-      // if an event was updated, check whether or not it was updated to a blocker status
-      var items = req.body.changelog.items
-      for(i=0;i<items.length;i++){
-        if(items[i].toString === "Blocker"){
-          web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
-          setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
-        }
-      }
-    }
-  }
-  
+  var blob = chunkJiraRequest(req.body)
+  handleBlockerIssue(blob)
+  handleDeploys(blob)
   res.send('Success')
 })
 
+// Make JIRA request body more manageable
+function chunkJiraRequest (body) {
+  var blob = {
+    priority: body.issue.fields.priority.name || 'No priority',
+    changes: body.changelog || [],
+    user: body.user.displayName || 'No user',
+    summary: body.issue.fields.summary || 'No summary',
+    key: body.issue.key || 'No issue key',
+    eventType: body.issue_event_type_name || 'No event type'
+  }
+  return blob
+}
+
+// Check for blockers
+function handleBlockerIssue (blob) {
+  if (blob.priority === 'Blocker') {
+    if (blob.eventType === 'issue_created') {
+      postBlockerIssue(blob.user, blob.key, blob.summary)
+    } else if (blob.eventType === 'issue_updated') {
+      for (var i = 0; i < blob.changes.items.length; i++) {
+        if (blob.changes.items[i].toString === 'Blocker') {
+          postBlockerIssue(blob.user, blob.key, blob.summary)
+          break
+        }
+      }
+    }
+  } else {
+    console.log(blob.priority + ' is not a blocker')
+  }
+}
+
+// Check for issues going live
+function handleDeploys (blob) {
+  for (var i = 0; i < blob.changes.items.length; i++) {
+    if (blob.changes.items[i].field === 'status' &&
+      blob.changes.items[i].toString === 'Live') {
+      postDeployedIssue(blob.key, blob.summary)
+    }
+  }
+}
+
+// Post issues to #deployments as they go live
+function postDeployedIssue (issueKey, summary) {
+  findChannel('deployments')
+    .then(function (channelId) {
+      console.log('Found deployments channel, id: ' + channelId)
+      web.chat.postMessage(channelId,
+        '*' + issueKey + ' deployed*' + '\n' +
+        summary
+      )
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected finding channel deployments')
+      console.error(reason)
+    })
+}
+
+// Post blocker issue to #group-blockers
+function postBlockerIssue (user, issueKey, summary) {
+  findChannel('group-blockers')
+    .then(function (channelId) {
+      console.log('Found group-blockers channel, id: ' + channelId)
+      // Found the channel, let's post to it
+      web.chat.postMessage(channelId,
+        '*' + user + ' found a blocker!*\n' +
+        'https://asapconnected.atlassian.net/browse/' + issueKey + '\n' +
+        '*Issue:* ' + summary + ' (' + issueKey + ')'
+      )
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected finding channel group-blockers')
+      console.error(reason)
+    })
+}
+
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
-  // console.log("req.body")
-  // console.log(req.body)
-
   var original = req.body.originalRequest
-
   console.log('stringified original slack request')
   console.log(JSON.stringify(original))
-
   var intent = req.body.result.metadata.intentName
   var response
-
   if (original.data.event.attachments) {
     if (original.data.event.attachments[0].fields[0].value === 'Blocker') {
       console.log('blocker found')
@@ -158,7 +210,6 @@ app.post('/handler', function (req, res) {
       response = { speech: req.body.result.fulfillment.speech }
     }
   }
-
   res.send(response)
 })
 
