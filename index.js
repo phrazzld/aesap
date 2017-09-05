@@ -43,26 +43,26 @@ var sendGif = function (pretext, imageUrl, text) {
   }
 }
 
-function findChannel(channelName){
-  var apiUrl='http://slack.com/api/channels.list?token='+token
-  console.log("finding channel names... ")
-  request(apiUrl,function(err,res,body){
-    console.log("Error:", err)
-    console.log("Response:", res && res.statusCode)
+function findChannel (channelName) {
+  var apiUrl = 'http://slack.com/api/channels.list?token=' + token
+  console.log('finding channel names... ')
+  request(apiUrl, function (err, res, body) {
+    console.log('Error:', err)
+    console.log('Response:', res && res.statusCode)
     return filterChannels(channelName, body)
   })
 }
 
-function filterChannels(channelName, body){
-  body=JSON.parse(body)
-  for(var i=0;i < body.channels.length;i++){
-    if(body.channels[i].name===channelName){
+function filterChannels (channelName, body) {
+  body = JSON.parse(body)
+  for (var i = 0; i < body.channels.length; i++) {
+    if (body.channels[i].name === channelName) {
       return body.channels[i].id
     }
   }
 }
 
-console.log(findChannel("botlab"))
+console.log(findChannel('botlab'))
 
 // router
 app.use(function (req, res, next) {
@@ -83,7 +83,7 @@ app.post('/jira', function (req, res) {
   console.log('\n Info: ')
   console.log(req.body.issue.key)
   console.log(req.body.user.displayName)
-  findChannel("yo")
+  findChannel('yo')
 
   if (priority === 'Minor') {
     web.chat.postMessage('C6B8SQWT0', 'Minor Issue Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
@@ -98,8 +98,8 @@ app.post('/jira', function (req, res) {
     } else if (event_type === 'issue_updated') {
       // if an event was updated, check whether or not it was updated to a blocker status
       var items = req.body.changelog.items
-      for(i=0;i<items.length;i++){
-        if(items[i].toString === "Blocker"){
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].toString === 'Blocker') {
           web.chat.postMessage('C6B8SQWT0', 'Blocker Found (https://asapconnected.atlassian.net/browse/' + req.body.issue.key + ') ')
           setTimeout(function () { web.chat.postMessage('C6B8SQWT0', "'" + req.body.issue.fields.summary + "' - " + req.body.user.displayName) }, 2500)
         }
