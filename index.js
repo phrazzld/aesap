@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var config = require('./config')
 var request = require('request')
 var WebClient = require('@slack/client').WebClient
-var twilio = require("twilio")
+var twilio = require('twilio')
 var twilioClient = new twilio(config.twilioSid, config.twilioAuthToken)
 
 // middleware
@@ -14,17 +14,17 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
-// testing
-// botlab = C6B8SQWT0
-// group-blockers = C4J7N1MEC
-
 var token = config.slackOAuth || ''
 var web = new WebClient(token)
 
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
-var sendGif = function (pretext, imageUrl, text) {
+function sendGif (pretext, imageUrl, text) {
+  console.log('sendGif')
+  console.log('pretext: ' + pretext)
+  console.log('imageUrl: ' + imageUrl)
+  console.log('text: ' + text)
   pretext = pretext || ''
   text = text || ''
   var color = colors[Math.floor(Math.random() * colors.length)]
@@ -93,8 +93,6 @@ function sendSMS(message, number){
     })
   }
 }
-
-sendSMS("yoyoyo","4154056035")
 
 // router
 app.use(function (req, res, next) {
@@ -193,33 +191,17 @@ app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
   var original = req.body.originalRequest
   console.log('stringified original slack request')
-  console.log(JSON.stringify(original))
+  console.log(JSON.stringify(original, null, 2))
   var intent = req.body.result.metadata.intentName
   var response
-  if (original.data.event.attachments) {
-    if (original.data.event.attachments[0].fields[0].value === 'Blocker') {
-      console.log('blocker found')
-      response = {
-        data: {
-          slack: {
-            text: '*Blocker Found*',
-            attachments: original.data.event.attachments
-          }
-        }
-      }
-    } else {
-      response = {speech: 'Attachment Found'}
-    }
+  if (intent === 'Gif') {
+    console.log('issa jif?')
+    response = sendGif(
+      'doh!',
+      'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
+    )
   } else {
-    if (intent === 'Gif') {
-      console.log('issa jif?')
-      response = sendGif(
-        'doh!',
-        'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
-      )
-    } else {
-      response = { speech: req.body.result.fulfillment.speech }
-    }
+    response = { speech: req.body.result.fulfillment.speech }
   }
   res.send(response)
 })
