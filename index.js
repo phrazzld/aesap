@@ -32,7 +32,7 @@ function sendGif (pretext, imageUrl, text) {
             fallback: 'gif gif gif',
             color: color,
             pretext: pretext,
-            imageUrl: imageUrl,
+            image_url: imageUrl,
             text: text
           }
         ]
