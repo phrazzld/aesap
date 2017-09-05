@@ -76,7 +76,8 @@ function filterChannels (channelName, body) {
 
 // Twilio integration
 function sendSMS(message, number){
-  if(Array.isArray(number)){
+  console.log(Array.isArray(number));
+  if(Array.isArray(number) === true){
     for(var i =0; i < number.length; i++){
       twilioClient.messages.create({
         body: message,
