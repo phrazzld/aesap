@@ -76,7 +76,6 @@ function filterChannels (channelName, body) {
 
 // Twilio integration
 function sendSMS(message, number){
-  console.log(Array.isArray(number));
   if(Array.isArray(number) === true){
     for(var i =0; i < number.length; i++){
       twilioClient.messages.create({
@@ -93,8 +92,6 @@ function sendSMS(message, number){
     })
   }
 }
-
-sendSMS("yoyoyo","4154056035")
 
 // router
 app.use(function (req, res, next) {
@@ -209,10 +206,9 @@ app.post('/handler', function (req, res) {
       }
     } else {
       response = {speech: 'Attachment Found'}
-    }
+    } 
   } else {
     if (intent === 'Gif') {
-      console.log('issa jif?')
       response = sendGif(
         'doh!',
         'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
