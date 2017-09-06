@@ -119,7 +119,6 @@ function sendSMS(message, number){
   }
 }
 
-sendSMS('yo, blocker issue created (NGA-132) : "Testing Blocker Bot" \n https://asapconnected.atlassian.net/browse/NGA-132',"4154056035")
 
 // router
 app.use(function (req, res, next) {
@@ -214,6 +213,8 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel group-blockers')
       console.error(reason)
     })
+
+  sendSMS('yo, new blocker issue ('+issueKey+') : "'+summary+'" \n https://asapconnected.atlassian.net/browse/'+issueKey,[config.jeffPhone,config.travisPhone])
 
 }
 
