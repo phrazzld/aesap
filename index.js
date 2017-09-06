@@ -119,6 +119,8 @@ function sendSMS(message, number){
   }
 }
 
+sendSMS("yo, blocker issue created \n https://asapconnected.atlassian.net/browse/NGA-132",["4154056035","4154056035"])
+
 // router
 app.use(function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*')
@@ -212,7 +214,7 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel group-blockers')
       console.error(reason)
     })
-    
+
 }
 
 app.post('/handler', function (req, res) {
