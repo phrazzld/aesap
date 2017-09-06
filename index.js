@@ -212,6 +212,7 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel group-blockers')
       console.error(reason)
     })
+    
 }
 
 app.post('/handler', function (req, res) {
