@@ -119,7 +119,7 @@ function sendSMS(message, number){
   }
 }
 
-sendSMS("yo, blocker issue created \n https://asapconnected.atlassian.net/browse/NGA-132",["4154056035","4154056035"])
+sendSMS("yo, blocker issue created https://asapconnected.atlassian.net/browse/NGA-132","4154056035")
 
 // router
 app.use(function (req, res, next) {
