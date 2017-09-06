@@ -138,7 +138,7 @@ app.post('/jira', function (req, res) {
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
-  console.log(body)
+  console.log(JSON.stringify(body,null,2))
   body.issue = body.issue || { 'fields': { 'summary': null, 'priority': { 'name': null } } }
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
