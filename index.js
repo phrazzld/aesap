@@ -138,6 +138,7 @@ app.post('/jira', function (req, res) {
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
+  console.log(body)
   body.issue = body.issue || { 'fields': { 'summary': null, 'priority': { 'name': null } } }
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
@@ -170,7 +171,7 @@ function handleBlockerIssue (blob) {
 
 // Check for issues going live
 function handleDeploys (blob) {
-  console.log(blob.changes.items)
+  // console.log(blob.changes.items)
   for (var i = 0; i < blob.changes.items.length; i++) {
     if (blob.changes.items[i].field === 'status' &&
       blob.changes.items[i].toString === 'Live') {
