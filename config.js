@@ -11,5 +11,6 @@ module.exports = {
   slackTeam: process.env.SLACK_TEAM_TOKEN,
   slackOAuth: process.env.SLACK_OAUTH_TOKEN,
   twilioSid: process.env.TWILIO_SID,
-  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN
+  twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
+  giphyApiKey: process.env.GIPHY_API_KEY
 }

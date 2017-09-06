@@ -6,7 +6,7 @@ var bodyParser = require('body-parser')
 var config = require('./config')
 var request = require('request')
 var WebClient = require('@slack/client').WebClient
-var twilio = require("twilio")
+var twilio = require('twilio')
 var twilioClient = new twilio(config.twilioSid, config.twilioAuthToken)
 
 // middleware
@@ -14,35 +14,61 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
 
-// testing
-// botlab = C6B8SQWT0
-// group-blockers = C4J7N1MEC
-
 var token = config.slackOAuth || ''
 var web = new WebClient(token)
 
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
-var sendGif = function (pretext, imageUrl, text) {
-  pretext = pretext || ''
-  text = text || ''
-  var color = colors[Math.floor(Math.random() * colors.length)]
-  return {
-    data: {
-      slack: {
-        attachments: [
-          {
-            fallback: 'gif gif gif',
-            color: color,
-            pretext: pretext,
-            imageUrl: imageUrl,
-            text: text
-          }
-        ]
+// Get a random gif by tag
+function fetchGif (tag) {
+  return new Promise(function (resolve, reject) {
+    var giphyUrl = 'https://api.giphy.com/v1/gifs/random?api_key='
+    giphyUrl += config.giphyApiKey
+    giphyUrl += '&tag=' + tag
+    giphyUrl += '&rating=g'
+    request(giphyUrl, function (err, res, body) {
+      if (err) {
+        console.log('Promise rejected finding a random gif')
+        console.error(err)
+        reject(err)
+      } else {
+        console.log('Successfully found gif')
+        // Blob returned as a string, gotta parse into JSON
+        resolve(JSON.parse(body).data.image_url)
       }
-    }
-  }
+    })
+  })
+}
+
+function sendGif (pretext, tag) {
+  pretext = pretext || ''
+  var color = colors[Math.floor(Math.random() * colors.length)]
+  return new Promise(function (resolve, reject) {
+    fetchGif(tag)
+      .then(function (gifUrl) {
+        var response = {
+          data: {
+            slack: {
+              attachments: [
+                {
+                  fallback: 'gif gif gif',
+                  color: color,
+                  pretext: pretext,
+                  image_url: gifUrl
+                }
+              ]
+            }
+          }
+        }
+        resolve(response)
+      })
+      .catch(function (reason) {
+        console.log('Promise rejected fetching gif with tag ' + tag)
+        console.error(reason)
+        reject(reason)
+      })
+  })
 }
 
 function findChannel (channelName) {
@@ -104,7 +130,6 @@ app.use(function (req, res, next) {
 
 app.post('/jira', function (req, res) {
   console.log('Hitting JIRA webhook')
-  console.log(JSON.stringify(req.body, null, 2))
   var blob = chunkJiraRequest(req.body)
   handleBlockerIssue(blob)
   handleDeploys(blob)
@@ -113,9 +138,10 @@ app.post('/jira', function (req, res) {
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
+  body.issue = body.issue || { 'fields': { 'summary': null, 'priority': { 'name': null } } }
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
-    changes: body.changelog || [],
+    changes: body.changelog || { 'items': [] },
     user: body.user.displayName || 'No user',
     summary: body.issue.fields.summary || 'No summary',
     key: body.issue.key || 'No issue key',
@@ -188,37 +214,44 @@ function postBlockerIssue (user, issueKey, summary) {
 
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
-  var original = req.body.originalRequest
-  console.log('stringified original slack request')
-  console.log(JSON.stringify(original))
   var intent = req.body.result.metadata.intentName
-  var response
-  if (original.data.event.attachments) {
-    if (original.data.event.attachments[0].fields[0].value === 'Blocker') {
-      console.log('blocker found')
-      response = {
-        data: {
-          slack: {
-            text: '*Blocker Found*',
-            attachments: original.data.event.attachments
-          }
-        }
-      }
-    } else {
-      response = {speech: 'Attachment Found'}
-    } 
-  } else {
-    if (intent === 'Gif') {
-      response = sendGif(
-        'doh!',
-        'http://media3.giphy.com/media/kEKcOWl8RMLde/giphy.gif'
-      )
-    } else {
-      response = { speech: req.body.result.fulfillment.speech }
-    }
-  }
-  res.send(response)
+  var speech = req.body.result.fulfillment.speech
+  defineResponse(intent, speech)
+    .then(function (result) {
+      console.log('Successfully defined response')
+      console.log(JSON.stringify(result, null, 2))
+      res.send(result)
+    })
+    .catch(function (reason) {
+      console.log('Promise rejected in defineResponse')
+      console.error(reason)
+    })
 })
+
+// Define response object for API.AI webhook
+function defineResponse (intent, speech) {
+  var response
+  return new Promise(function (resolve, reject) {
+    if (intent === 'Gif') {
+      console.log('We got a gif!')
+      sendGif('doh!', 'Homer Simpson')
+        .then(function (gifBlob) {
+          response = gifBlob
+          resolve(response)
+        })
+        .catch(function (reason) {
+          console.log('Promise rejected in sendGif call in defineResponse')
+          console.error(reason)
+          reject(reason)
+        })
+    } else {
+      response = {
+        speech: speech
+      }
+      resolve(response)
+    }
+  })
+}
 
 app.listen(config.port, function (req, res) {
   console.log('Port ' + config.port + ': "Whirrr..."')
