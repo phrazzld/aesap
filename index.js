@@ -107,14 +107,14 @@ function sendSMS(message, number){
       twilioClient.messages.create({
         body: message,
         to: "+1"+number[i],
-        from: "+14152149232"
+        from: "+1"+config.twilioPhone
       })
     }
   } else{
     twilioClient.messages.create({
       body: message,
       to: "+1"+number,
-      from: "+14152149232"
+      from: "+1"+config.twilioPhone
     })
   }
 }
@@ -170,6 +170,7 @@ function handleBlockerIssue (blob) {
 
 // Check for issues going live
 function handleDeploys (blob) {
+  console.log(blob.changes.items)
   for (var i = 0; i < blob.changes.items.length; i++) {
     if (blob.changes.items[i].field === 'status' &&
       blob.changes.items[i].toString === 'Live') {

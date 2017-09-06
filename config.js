@@ -12,5 +12,8 @@ module.exports = {
   slackOAuth: process.env.SLACK_OAUTH_TOKEN,
   twilioSid: process.env.TWILIO_SID,
   twilioAuthToken: process.env.TWILIO_AUTH_TOKEN,
-  giphyApiKey: process.env.GIPHY_API_KEY
+  giphyApiKey: process.env.GIPHY_API_KEY,
+  twilioPhone: process.env.TWILIO_NUMBER,
+  travisPhone: process.env.TRAVIS_NUMBER,
+  jeffPhone: process.env.JEFF_NUMBER
 }
