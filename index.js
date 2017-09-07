@@ -45,6 +45,8 @@ function asapFetchOrgInfo (params) {
       } else {
         console.log('Successfully posted to asapUrl')
         console.log(JSON.stringify(body, null, 2))
+        console.log('\n')
+        console.log(body)
         resolve('Success!')
       }
     })
