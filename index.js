@@ -10,6 +10,7 @@ var twilioClient = new twilio(config.twilioSid, config.twilioAuthToken)
 var asap = require('./asap')
 var slack = require('./slack')
 var jira = require('./jira')
+var lulz = require('./lulz')
 
 // middleware
 app.use(bodyParser.json())
@@ -50,7 +51,7 @@ function defineResponse (intent, speech, params) {
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
       console.log('We got a gif!')
-      sendGif('doh!', 'Homer Simpson')
+      lulz.sendGif('doh!', 'Homer Simpson')
         .then(function (gifBlob) {
           response = gifBlob
           resolve(response)
