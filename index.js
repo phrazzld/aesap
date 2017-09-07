@@ -21,12 +21,35 @@ var web = new WebClient(token)
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
 // Hit AsapSuperUser controller Test function
-/*
 function asapFetchOrgInfo (params) {
   var orgId = params['orgId']
-  var asapUrl = 'https://
+  var asapUrl = 'http://stagingapi.asapconnected.com/api/AsapSuper/Test?orgId='
+  asapUrl += orgId
+  console.log('asapUrl: ' + asapUrl)
+  var opts = {
+    url: asapUrl,
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      appname: 'aesap',
+      asap_accesstoken: 'beep beep boop beep'
+    }
+  }
+  return new Promise(function (resolve, reject) {
+    request.post(opts, function (err, response, body) {
+      if (err) {
+        console.log('Error!')
+        console.error(err)
+        reject(err)
+      } else {
+        console.log('Successfully posted to asapUrl')
+        console.log(JSON.stringify(body, null, 2))
+        resolve('Success!')
+      }
+    })
+  })
 }
-*/
 
 // Get a random gif by tag
 function fetchGif (tag) {
@@ -262,7 +285,6 @@ function defineResponse (intent, speech, params) {
           console.error(reason)
           reject(reason)
         })
-        /*
     } else if (intent === 'org info') {
       console.log('Fetching org info')
       // Fetch org info from ASAP API using orgId parameter
@@ -277,7 +299,6 @@ function defineResponse (intent, speech, params) {
           console.error(reason)
           reject(reason)
         })
-        */
     } else {
       response = {
         speech: speech
