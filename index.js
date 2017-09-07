@@ -51,7 +51,7 @@ function defineResponse (intent, speech, params) {
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
       console.log('We got a gif!')
-      lulz.sendGif('doh!', 'Homer Simpson')
+      lulz.sendGif('D\'oh!', 'Homer Simpson', 'g', 'Mmmmm... donuts...')
         .then(function (gifBlob) {
           response = gifBlob
           resolve(response)
