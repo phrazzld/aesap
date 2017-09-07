@@ -15,5 +15,8 @@ module.exports = {
   giphyApiKey: process.env.GIPHY_API_KEY,
   twilioPhone: process.env.TWILIO_NUMBER,
   travisPhone: process.env.TRAVIS_NUMBER,
-  jeffPhone: process.env.JEFF_NUMBER
+  jeffPhone: process.env.JEFF_NUMBER,
+  asapApiAppName: process.env.ASAP_API_APPNAME,
+  asapApiToken: process.env.ASAP_API_TOKEN,
+  asapUrl: process.env.ASAP_API_URL
 }
