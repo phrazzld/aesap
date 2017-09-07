@@ -20,6 +20,14 @@ var web = new WebClient(token)
 // functions
 var colors = ['#EB4D5C', '#007AB8', '#000', '#4D394B', '#FAD529', '#298FC3']
 
+// Hit AsapSuperUser controller Test function
+/*
+function asapFetchOrgInfo (params) {
+  var orgId = params['orgId']
+  var asapUrl = 'https://
+}
+*/
+
 // Get a random gif by tag
 function fetchGif (tag) {
   return new Promise(function (resolve, reject) {
@@ -186,7 +194,8 @@ function postDeployedIssue (issueKey, summary) {
       console.log('Found deployments channel, id: ' + channelId)
       web.chat.postMessage(channelId,
         '*' + issueKey + ' deployed*' + '\n' +
-        summary
+        summary + '\n' +
+        'https://asapconnected.atlassian.net/browse/' + issueKey
       )
     })
     .catch(function (reason) {
@@ -217,7 +226,8 @@ app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
   var intent = req.body.result.metadata.intentName
   var speech = req.body.result.fulfillment.speech
-  defineResponse(intent, speech)
+  var params = req.body.result.parameters
+  defineResponse(intent, speech, params)
     .then(function (result) {
       console.log('Successfully defined response')
       console.log(JSON.stringify(result, null, 2))
@@ -230,7 +240,7 @@ app.post('/handler', function (req, res) {
 })
 
 // Define response object for API.AI webhook
-function defineResponse (intent, speech) {
+function defineResponse (intent, speech, params) {
   var response
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
@@ -245,6 +255,22 @@ function defineResponse (intent, speech) {
           console.error(reason)
           reject(reason)
         })
+        /*
+    } else if (intent === 'org info') {
+      console.log('Fetching org info')
+      // Fetch org info from ASAP API using orgId parameter
+      asapFetchOrgInfo(params)
+        .then(function (result) {
+          console.log('Successfully fetched org info from ASAP API')
+          response = result
+          resolve(response)
+        })
+        .catch(function (reason) {
+          console.log('Promise rejected in asapFetchOrgInfo')
+          console.error(reason)
+          reject(reason)
+        })
+        */
     } else {
       response = {
         speech: speech
