@@ -44,9 +44,10 @@ function asapFetchOrgInfo (params) {
         reject(err)
       } else {
         console.log('Successfully posted to asapUrl')
-        console.log(JSON.stringify(body, null, 2))
-        console.log('\n')
-        console.log(body)
+        console.log(JSON.stringify(JSON.parse(body), null, 2))
+        var keys = Object.keys(JSON.parse(body))
+        console.log('keys')
+        console.log(keys)
         resolve('Success!')
       }
     })
