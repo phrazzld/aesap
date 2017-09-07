@@ -66,9 +66,11 @@ function defineResponse (intent, speech, params) {
       // Fetch org info from ASAP API using orgId parameter
       var orgId = params['orgId']
       asap.fetchOrgInfo(orgId)
-        .then(function (result) {
+        .then(function (orgName) {
           console.log('Successfully fetched org info from ASAP API')
-          response = result
+          response = {
+            speech: 'That would be ' + orgName + '!'
+          }
           resolve(response)
         })
         .catch(function (reason) {
