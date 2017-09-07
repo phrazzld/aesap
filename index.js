@@ -109,24 +109,23 @@ function filterChannels (channelName, body) {
 }
 
 // Twilio integration
-function sendSMS(message, number){
-  if(Array.isArray(number) === true){
-    for(var i =0; i < number.length; i++){
+function sendSMS (message, number) {
+  if (Array.isArray(number)) {
+    for (var i = 0; i < number.length; i++) {
       twilioClient.messages.create({
         body: message,
-        to: "+1"+number[i],
-        from: "+1"+config.twilioPhone
+        to: '+1' + number[i],
+        from: '+1' + config.twilioPhone
       })
     }
-  } else{
+  } else {
     twilioClient.messages.create({
       body: message,
-      to: "+1"+number,
-      from: "+1"+config.twilioPhone
+      to: '+1' + number,
+      from: '+1' + config.twilioPhone
     })
   }
 }
-
 
 // router
 app.use(function (req, res, next) {
@@ -147,7 +146,7 @@ app.post('/jira', function (req, res) {
 
 // Make JIRA request body more manageable
 function chunkJiraRequest (body) {
-  console.log(JSON.stringify(body,null,2))
+  console.log(JSON.stringify(body, null, 2))
   body.issue = body.issue || { 'fields': { 'summary': null, 'priority': { 'name': null } } }
   var blob = {
     priority: body.issue.fields.priority.name || 'No priority',
@@ -222,9 +221,12 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel group-blockers')
       console.error(reason)
     })
-
-  sendSMS('yo, new blocker issue ('+issueKey+') : "'+summary+'" \n https://asapconnected.atlassian.net/browse/'+issueKey,[config.jeffPhone,config.travisPhone])
-
+  // Build blocker notification message
+  var message = 'yo, new blocker issue (' + issueKey + '):\n'
+  message += '"' + summary + '"\n'
+  message += 'https://asapconnected.atlassian.net/browse/' + issueKey
+  // Send message to Jeff and Travis
+  sendSMS(message, [config.jeffPhone, config.travisPhone])
 }
 
 app.post('/handler', function (req, res) {
