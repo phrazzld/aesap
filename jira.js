@@ -27,6 +27,7 @@ function handleBlocker (blob) {
 }
 
 function handleDeploy (blob) {
+  console.log(JSON.stringify(blob, null, 2))
   for (var i = 0; i < blob.changes.items.length; i++) {
     if (blob.changes.items[i].field === 'status' &&
       blob.changes.items[i] === 'Live') {
@@ -51,8 +52,7 @@ function postDeployedIssue (issueKey, summary) {
 }
 
 function postBlockerIssue (user, issueKey, summary) {
-  // slack.findChannel('group-blockers')
-  slack.findChannel('botlab')
+  slack.findChannel('group-blockers')
     .then(function (channelId) {
       slack.client.chat.postMessage(channelId,
         '*' + user + ' found a blocker!*\n' +
