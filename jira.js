@@ -9,16 +9,18 @@ function handleBlocker (blob) {
   if (blob.priority === 'Blocker') {
     if (bloc.eventType === 'issue_created') {
       postBlockerIssue(blob.user, blob.key, blob.summary)
+      console.log("Blocker Issue Found")
     } else if (blob.eventType === 'issue_updated') {
       for (var i = 0; i < blob.changes.items.length; i++) {
         if (blob.changes.items[i] === 'Blocker') {
           postBlockerIssue(blob.user, blob.key, blob.summary)
+          console.log("Issue Changed to Blocker")
           break
         }
       }
     }
   } else {
-    console.log(blob.priority + ' is not a blocker')
+    console.log(blob.priority + ' is not a blocker');
   }
 }
 
@@ -47,7 +49,8 @@ function postDeployedIssue (issueKey, summary) {
 }
 
 function postBlockerIssue (user, issueKey, summary) {
-  slack.findChannel('group-blockers')
+  // slack.findChannel('group-blockers')
+  slack.findChannel('botlab')
     .then(function (channelId) {
       slack.client.chat.postMessage(channelId,
         '*' + user + ' found a blocker!*\n' +
