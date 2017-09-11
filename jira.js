@@ -27,7 +27,6 @@ function handleBlocker (blob) {
 }
 
 function handleDeploy (blob) {
-  console.log(JSON.stringify(blob, null, 2))
   for (var i = 0; i < blob.changes.items.length; i++) {
     if (blob.changes.items[i].field === 'status' &&
       blob.changes.items[i].toString === 'Live') {
