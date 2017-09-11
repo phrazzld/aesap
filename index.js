@@ -10,6 +10,7 @@ var twilioClient = new twilio(config.twilioSid, config.twilioAuthToken)
 var asap = require('./asap')
 var slack = require('./slack')
 var jira = require('./jira')
+var lulz = require('./lulz')
 
 // middleware
 app.use(bodyParser.json())
@@ -50,7 +51,7 @@ function defineResponse (intent, speech, params) {
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
       console.log('We got a gif!')
-      sendGif('doh!', 'Homer Simpson')
+      lulz.sendGif('D\'oh!', 'Homer Simpson', 'g', 'Mmmmm... donuts...')
         .then(function (gifBlob) {
           response = gifBlob
           resolve(response)
@@ -65,9 +66,11 @@ function defineResponse (intent, speech, params) {
       // Fetch org info from ASAP API using orgId parameter
       var orgId = params['orgId']
       asap.fetchOrgInfo(orgId)
-        .then(function (result) {
+        .then(function (orgName) {
           console.log('Successfully fetched org info from ASAP API')
-          response = result
+          response = {
+            speech: 'That would be ' + orgName + '!'
+          }
           resolve(response)
         })
         .catch(function (reason) {

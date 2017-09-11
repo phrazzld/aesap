@@ -7,7 +7,7 @@ var jiraBaseUrl = 'https://asapconnected.atlassian.net/browse/'
 
 function handleBlocker (blob) {
   if (blob.priority === 'Blocker') {
-    if (bloc.eventType === 'issue_created') {
+    if (blob.eventType === 'issue_created') {
       postBlockerIssue(blob.user, blob.key, blob.summary)
       console.log("Blocker Issue Found")
     } else if (blob.eventType === 'issue_updated') {

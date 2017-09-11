@@ -12,7 +12,7 @@ function fetchGif (tag, rating) {
   if (!rating) { rating = 'g' }
   var url = giphyUrl + '&tag=' + tag + '&rating=' + rating
   return new Promise(function (resolve, reject) {
-    request(giphyUrl, function (err, res, body) {
+    request(url, function (err, res, body) {
       if (err) {
         console.log('Request to giphyUrl ' + giphyUrl + ' failed')
         console.error(err)

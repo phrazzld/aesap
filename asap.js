@@ -24,10 +24,9 @@ function fetchOrgInfo (orgId) {
         reject(err)
       } else {
         console.log('Successfully posted to AsapSuperController Test method')
-        var keys = Object.keys(JSON.parse(body))
-        console.log('Result blob keys:')
-        console.log(keys)
-        resolve('Success')
+        var blob = JSON.parse(body)
+        var name = blob.Name
+        resolve(name)
       }
     })
   })
