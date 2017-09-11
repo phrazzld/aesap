@@ -6,14 +6,14 @@ var slack = require('./slack')
 var jiraBaseUrl = 'https://asapconnected.atlassian.net/browse/'
 
 function handleBlocker (blob) {
-  // console.log(blob)
   if (blob.priority === 'Blocker') {
     if (blob.eventType === 'issue_created') {
       postBlockerIssue(blob.user, blob.key, blob.summary)
       console.log("Blocker Issue Found")
     } else if (blob.eventType === 'issue_updated') {
-      // console.log(JSON.stringify(blob.changes, null, 2))
       for (var i = 0; i < blob.changes.items.length; i++) {
+        // * Don't run standard cleanup on this! *
+        // it removes the toString attribute
         if (blob.changes.items[i].toString === 'Blocker' && blob.changes.items[i].field === "priority") {
           postBlockerIssue(blob.user, blob.key, blob.summary)
           console.log("Issue Changed to Blocker")
@@ -30,7 +30,7 @@ function handleDeploy (blob) {
   console.log(JSON.stringify(blob, null, 2))
   for (var i = 0; i < blob.changes.items.length; i++) {
     if (blob.changes.items[i].field === 'status' &&
-      blob.changes.items[i] === 'Live') {
+      blob.changes.items[i].toString === 'Live') {
       postDeployedIssue(blob.key, blob.summary)
     }
   }
@@ -64,6 +64,9 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel #group-blockers')
       console.error(reason)
     })
+
+  sendSMS('yo, blocker issue made (' + issueKey + '): "' + summary + '" \n https://asapconnected.atlassian.net/browse/' + issueKey)
+
 }
 
 function chunkRequest (body) {
