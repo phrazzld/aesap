@@ -6,12 +6,13 @@ var slack = require('./slack')
 var jiraBaseUrl = 'https://asapconnected.atlassian.net/browse/'
 
 function handleBlocker (blob) {
-  console.log(blob)
+  // console.log(blob)
   if (blob.priority === 'Blocker') {
     if (blob.eventType === 'issue_created') {
       postBlockerIssue(blob.user, blob.key, blob.summary)
       console.log("Blocker Issue Found")
     } else if (blob.eventType === 'issue_updated') {
+      console.log(JSON.stringify(blob.changes, null, 2))
       for (var i = 0; i < blob.changes.items.length; i++) {
         if (blob.changes.items[i] === 'Blocker') {
           postBlockerIssue(blob.user, blob.key, blob.summary)
