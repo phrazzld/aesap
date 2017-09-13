@@ -39,8 +39,8 @@ function postDeployedIssue (issueKey, summary) {
   slack.findChannel('deployments')
     .then(function (channelId) {
       slack.client.chat.postMessage(channelId,
-        '*' + summary + ' *\n' +
         issueKey + "deployed \n" +
+        '*' + summary + ' *\n' +
         jiraBaseUrl + issueKey
       )
     })
