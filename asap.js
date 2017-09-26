@@ -25,8 +25,8 @@ function fetchOrgInfo (orgId) {
       } else {
         console.log('Successfully posted to AsapSuperController Test method')
         var blob = JSON.parse(body)
-        var name = blob.Name
-        resolve(name)
+        console.log(blob)
+        resolve(blob)
       }
     })
   })
