@@ -24,6 +24,7 @@ function fetchOrgInfo (orgId) {
         reject(err)
       } else {
         console.log('Successfully posted to AsapSuperController Test method')
+        console.log(body)
         var blob = JSON.parse(body)
         console.log(blob)
         resolve(blob)
