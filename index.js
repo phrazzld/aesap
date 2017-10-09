@@ -70,6 +70,7 @@ function defineResponse (intent, speech, params, action) {
         })
         .catch(function (reason) {
           console.log('Promise rejected in asapFetchOrgInfo')
+          console.log(reason)
           console.error(reason)
           reject(reason)
         })
@@ -99,6 +100,7 @@ app.post('/handler', function (req, res) {
     })
     .catch(function (reason) {
       console.log('Promise rejected in defineResponse')
+      console.log(reason)
       console.error(reason)
     })
 })
