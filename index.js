@@ -61,15 +61,25 @@ function defineResponse (intent, speech, params) {
           console.error(reason)
           reject(reason)
         })
-    } else if (intent === 'org info') {
+    } else if (action === 'fetchOrgInfo') {
       console.log('Fetching org info')
       // Fetch org info from ASAP API using orgId parameter
       var orgId = params['orgId']
       asap.fetchOrgInfo(orgId)
         .then(function (org) {
           console.log('Successfully fetched org info from ASAP API')
-          response = {
-            speech: 'That would be ' + org.Name + '!'
+          if (intent === 'org name') {
+            response = {
+              speech: 'That would be ' + org.Name + '!'
+            }
+          } else if (intent === 'org csm') {
+            response = {
+              speech: 'Why it looks like ' + org.CSMgr[0].toUpperCase() + org.CSMgr.slice(1) + ' is ' + org.Name + '\'s account manager!'
+            }
+          } else {
+            response = {
+              speech: 'Hmm, I had trouble getting you what you wanted. Could you try asking again?'
+            }
           }
           resolve(response)
         })
@@ -93,9 +103,10 @@ function defineResponse (intent, speech, params) {
 app.post('/handler', function (req, res) {
   console.log('Hitting API.AI webhook')
   var intent = req.body.result.metadata.intentName
+  var action = req.body.result.action
   var speech = req.body.result.fulfillment.speech
   var params = req.body.result.parameters
-  defineResponse(intent, speech, params)
+  defineResponse(intent, speech, params, action)
     .then(function (result) {
       console.log('Successfully defined response')
       console.log(JSON.stringify(result, null, 2))
