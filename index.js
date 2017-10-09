@@ -43,7 +43,6 @@ function defineResponse (intent, speech, params, action) {
         })
         .catch(function (reason) {
           console.log('Promise rejected in sendGif call in defineResponse')
-          console.error(reason)
           reject(reason)
         })
     } else if (action === 'fetchOrgInfo') {
@@ -58,8 +57,13 @@ function defineResponse (intent, speech, params, action) {
               speech: 'That would be ' + org.Name + '!'
             }
           } else if (intent === 'org csm') {
+            if (org.CSMgr === '') {
+              speech = 'There doesn\'t seem to be an account manager defined for ' + org.Name + '.'
+            } else {
+              speech = 'Why it looks like ' + org.CSMgr[0].toUpperCase() + org.CSMgr.slice(1) + ' is ' + org.Name + '\'s account manager!'
+            }
             response = {
-              speech: 'Why it looks like ' + org.CSMgr[0].toUpperCase() + org.CSMgr.slice(1) + ' is ' + org.Name + '\'s account manager!'
+              speech: speech
             }
           } else {
             response = {
@@ -71,7 +75,6 @@ function defineResponse (intent, speech, params, action) {
         .catch(function (reason) {
           console.log('Promise rejected in asapFetchOrgInfo')
           console.log(reason)
-          console.error(reason)
           reject(reason)
         })
     } else {
