@@ -29,6 +29,10 @@ app.use(function (req, res, next) {
 // Define response object for API.AI webhook
 function defineResponse (intent, speech, params, action) {
   var response
+  console.log('intent: ' + intent)
+  console.log('params: ')
+  console.log(params)
+  console.log('action: ' + action)
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
       console.log('We got a gif!')
