@@ -26,27 +26,8 @@ app.use(function (req, res, next) {
   next()
 })
 
-// Twilio integration
-function sendSMS (message, number) {
-  if (Array.isArray(number)) {
-    for (var i = 0; i < number.length; i++) {
-      twilioClient.messages.create({
-        body: message,
-        to: '+1' + number[i],
-        from: '+1' + config.twilioPhone
-      })
-    }
-  } else {
-    twilioClient.messages.create({
-      body: message,
-      to: '+1' + number,
-      from: '+1' + config.twilioPhone
-    })
-  }
-}
-
 // Define response object for API.AI webhook
-function defineResponse (intent, speech, params) {
+function defineResponse (intent, speech, params, action) {
   var response
   return new Promise(function (resolve, reject) {
     if (intent === 'Gif') {
