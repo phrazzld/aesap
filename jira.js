@@ -3,6 +3,7 @@
 
 var config = require('./config')
 var slack = require('./slack')
+var helpers = require('./helpers')
 var jiraBaseUrl = 'https://asapconnected.atlassian.net/browse/'
 
 function handleBlocker (blob) {
@@ -63,9 +64,7 @@ function postBlockerIssue (user, issueKey, summary) {
       console.log('Promise rejected finding channel #group-blockers')
       console.error(reason)
     })
-
-  sendSMS('yo, blocker issue made (' + issueKey + '): "' + summary + '" \n https://asapconnected.atlassian.net/browse/' + issueKey)
-
+  helpers.sendSMS('yo, blocker issue made (' + issueKey + '): "' + summary + '" \n https://asapconnected.atlassian.net/browse/' + issueKey)
 }
 
 function chunkRequest (body) {
