@@ -11,6 +11,7 @@ function handleBlocker (blob) {
     if (blob.eventType === 'issue_created') {
       postBlockerIssue(blob.user, blob.key, blob.summary)
       console.log("Blocker Issue Found")
+      helpers.sendSMS("yoyoyo","4154056035")
     } else if (blob.eventType === 'issue_updated') {
       for (var i = 0; i < blob.changes.items.length; i++) {
         // * Don't run standard cleanup on this! *
@@ -18,6 +19,7 @@ function handleBlocker (blob) {
         if (blob.changes.items[i].toString === 'Blocker' && blob.changes.items[i].field === "priority") {
           postBlockerIssue(blob.user, blob.key, blob.summary)
           console.log("Issue Changed to Blocker")
+          helpers.sendSMS("yoyoyo","4154056035")
           break
         }
       }
