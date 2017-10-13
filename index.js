@@ -21,7 +21,7 @@ app.use(sanitizer())
 // sms test
 var blobSummary = "test issue"
 var blobKey = "OPS-2289"
-helper.sendSMS("Blocker Issue Found: " + blobSummary + " (" + blobKey + ")")
+helpers.sendSMS("Blocker Issue Found: " + blobSummary + " (" + blobKey + ")")
 
 
 // router
