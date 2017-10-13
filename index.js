@@ -11,11 +11,18 @@ var asap = require('./asap')
 var slack = require('./slack')
 var jira = require('./jira')
 var lulz = require('./lulz')
+var helpers = require('./helpers');
 
 // middleware
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(sanitizer())
+
+// sms test
+var blobSummary = "test issue"
+var blobKey = "OPS-2289"
+helper.sendSMS("Blocker Issue Found: " + blobSummary + " (" + blobKey + ")")
+
 
 // router
 app.use(function (req, res, next) {
