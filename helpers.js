@@ -9,7 +9,6 @@ var twilioClient = require('twilio')(
 function sendSMS (message, number) {
   if (Array.isArray(number)) {
     for (var i = 0; i < number.length; i++) {
-      console.log("yoyoyo");
       twilioClient.messages.create({
         body: message,
         to: '+1' + number[i],
